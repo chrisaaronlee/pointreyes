@@ -92,13 +92,18 @@
         </div>
 
         <button onclick="navTo('home')" class="nav-btn flex flex-col lg:flex-row items-center gap-1 lg:gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-white" data-view="home">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z" /></svg>
             <span class="text-[10px] lg:text-sm font-bold">Basecamp</span>
         </button>
 
         <button onclick="navTo('itinerary')" class="nav-btn flex flex-col lg:flex-row items-center gap-1 lg:gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-white" data-view="itinerary">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 001 1z" /></svg>
             <span class="text-[10px] lg:text-sm font-bold">Journal</span>
+        </button>
+
+        <button onclick="navTo('map')" class="nav-btn flex flex-col lg:flex-row items-center gap-1 lg:gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-white" data-view="map">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.483V4a2 2 0 012.236-1.992L9 3m0 17l5-2.5m-5 2.5V3m5 14.5l5.447 2.724A2 2 0 0021 18.517V7a2 2 0 00-2.236-1.992L14 7m0 10.5V7" /></svg>
+            <span class="text-[10px] lg:text-sm font-bold">Map</span>
         </button>
 
         <button onclick="navTo('hub')" class="nav-btn flex flex-col lg:flex-row items-center gap-1 lg:gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-white" data-view="hub">
@@ -234,10 +239,12 @@
                         </div>
 
                         <!-- Map Card -->
-                        <div class="bento-card glass rounded-[3rem] p-10 lg:col-span-1 flex flex-col justify-between">
-                            <h4 class="text-xl font-serif italic text-white">The Master Map</h4>
-                            <p class="text-slate-500 text-sm mt-2">All coordinates, trails, and eats synced to your Google account.</p>
-                            <a href="https://www.google.com/maps/d/u/1/edit?mid=1-YIOan-toj1J7UnTdvnM8ayFENyVumU" target="_blank" class="mt-6 w-full py-4 bg-white text-black font-bold rounded-2xl text-center hover:bg-slate-200 transition-all">Launch Maps</a>
+                        <div onclick="navTo('map')" class="bento-card glass rounded-[3rem] p-10 lg:col-span-1 flex flex-col justify-between cursor-pointer group">
+                            <div>
+                                <h4 class="text-xl font-serif italic text-white">The Master Map</h4>
+                                <p class="text-slate-500 text-sm mt-2">All coordinates, trails, and eats synced to your Google account.</p>
+                            </div>
+                            <div class="mt-6 w-full py-4 bg-white text-black font-bold rounded-2xl text-center group-hover:bg-slate-200 transition-all">Explore Map</div>
                         </div>
 
                         <!-- Rules of the Coast -->
@@ -294,6 +301,23 @@
                                 </div>
                             </section>
                         `).join('')}
+                    </div>
+                </div>
+            `,
+            map: () => `
+                <div class="animate-in h-[calc(100vh-12rem)] flex flex-col">
+                    <header class="mb-8">
+                        <h2 class="text-4xl font-serif italic text-white">Master <span class="text-emerald-700">Reference</span></h2>
+                    </header>
+                    <div class="glass rounded-[2.5rem] overflow-hidden p-2 flex-1 shadow-2xl">
+                        <iframe 
+                            src="https://www.google.com/maps/d/u/1/embed?mid=1-YIOan-toj1J7UnTdvnM8ayFENyVumU&ehbc=2E312F" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0; border-radius: 2rem;" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                        </iframe>
                     </div>
                 </div>
             `,

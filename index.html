@@ -1,462 +1,387 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>West Marin | Forest & Coast</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <style>
-        :root {
-            /* West Marin Forest & Coast Palette */
-            --forest-deep: #060907;
-            --moss: #3d5a45;
-            --mist: #94a3b8;
-            --pacific: #1e293b;
-            --ember: #f97316; /* Fire pit accent */
-            --border: rgba(255, 255, 255, 0.08);
-            --glass-bg: rgba(15, 23, 18, 0.7);
-        }
+import React, { useState } from 'react';
+import { 
+  Calendar, 
+  MapPin, 
+  Home, 
+  Navigation, 
+  ChevronDown, 
+  ChevronUp, 
+  CheckCircle, 
+  AlertTriangle, 
+  Wind, 
+  Coffee, 
+  Trees, 
+  Waves,
+  Camera,
+  Moon,
+  ExternalLink,
+  Clock,
+  Info
+} from 'lucide-react';
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--forest-deep);
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(61, 90, 69, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(30, 41, 59, 0.15) 0%, transparent 50%);
-            color: #f1f5f9;
-            overflow-x: hidden;
-        }
+const App = () => {
+  const [activeTab, setActiveTab] = useState('days');
+  const [openAccordion, setOpenAccordion] = useState('morning');
+  const [lunchOption, setLunchOption] = useState('A'); // 'A' for Fairfax, 'B' for Cottage
 
-        .font-serif { font-family: 'Playfair Display', serif; }
+  // Color Palette Constants
+  const colors = {
+    bg: '#E8ECEB',
+    text: '#2D3A30',
+    accent: '#D97706',
+  };
 
-        /* Sophisticated Forest Glassmorphism */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-        }
+  const NavigateButton = ({ url }) => (
+    <a 
+      href={url} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="flex items-center justify-center gap-2 w-full py-3 mt-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50 active:scale-95 transition-all text-sm font-medium"
+      style={{ color: colors.text }}
+    >
+      <Navigation size={16} className="text-emerald-700" />
+      Navigate
+    </a>
+  );
 
-        /* Dashboard Card Hover */
-        .bento-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-        .bento-card:hover {
-            transform: translateY(-6px);
-            border-color: var(--moss);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6);
-        }
+  const VerifiedBadge = () => (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase tracking-wider">
+      <CheckCircle size={10} />
+      Verified
+    </span>
+  );
 
-        .nav-btn { transition: all 0.3s ease; }
-        .nav-btn.active {
-            color: #fff;
-            background: rgba(61, 90, 69, 0.3);
-            border: 1px solid var(--moss);
-        }
-
-        #main-view { transition: opacity 0.4s ease, transform 0.4s ease; }
-        .fade-out { opacity: 0; transform: translateY(15px); }
-
-        .img-overlay {
-            background: linear-gradient(to bottom, transparent 20%, rgba(6, 9, 7, 0.9) 100%);
-        }
-
-        .misted-img {
-            filter: saturate(0.7) contrast(1.1) brightness(0.8);
-            transition: filter 0.5s ease;
-        }
-        .bento-card:hover .misted-img {
-            filter: saturate(0.9) contrast(1.1) brightness(0.9);
-        }
-
-        .fire-glow {
-            box-shadow: 0 0 20px rgba(249, 115, 22, 0.1);
-        }
-    </style>
-</head>
-<body class="pb-24 lg:pb-0">
-
-    <!-- Desktop Sidebar / Mobile Bottom Nav -->
-    <nav class="fixed bottom-0 left-0 w-full lg:top-0 lg:left-0 lg:w-64 lg:h-full glass z-50 border-t lg:border-r lg:border-t-0 px-4 py-2 lg:py-10 flex lg:flex-col justify-around lg:justify-start gap-4">
-        <div class="hidden lg:block mb-10 px-4">
-            <h1 class="text-2xl font-serif italic font-bold tracking-tight text-white underline decoration-emerald-700 decoration-2 underline-offset-8">West Marin</h1>
-            <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-[0.3em] mt-3">Winter Expedition</p>
-        </div>
-
-        <button onclick="navTo('home')" class="nav-btn flex flex-col lg:flex-row items-center gap-1 lg:gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-white" data-view="home">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z" /></svg>
-            <span class="text-[10px] lg:text-sm font-bold">Basecamp</span>
-        </button>
-
-        <button onclick="navTo('itinerary')" class="nav-btn flex flex-col lg:flex-row items-center gap-1 lg:gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-white" data-view="itinerary">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 001 1z" /></svg>
-            <span class="text-[10px] lg:text-sm font-bold">Journal</span>
-        </button>
-
-        <button onclick="navTo('map')" class="nav-btn flex flex-col lg:flex-row items-center gap-1 lg:gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-white" data-view="map">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.483V4a2 2 0 012.236-1.992L9 3m0 17l5-2.5m-5 2.5V3m5 14.5l5.447 2.724A2 2 0 0021 18.517V7a2 2 0 00-2.236-1.992L14 7m0 10.5V7" /></svg>
-            <span class="text-[10px] lg:text-sm font-bold">Map</span>
-        </button>
-
-        <button onclick="navTo('hub')" class="nav-btn flex flex-col lg:flex-row items-center gap-1 lg:gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-white" data-view="hub">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-            <span class="text-[10px] lg:text-sm font-bold">Stay Details</span>
-        </button>
-
-        <button onclick="navTo('guide')" class="nav-btn flex flex-col lg:flex-row items-center gap-1 lg:gap-3 px-4 py-3 rounded-2xl text-slate-500 hover:text-white" data-view="guide">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
-            <span class="text-[10px] lg:text-sm font-bold">Discovery</span>
-        </button>
-    </nav>
-
-    <!-- Main Content Area -->
-    <main class="lg:ml-64 min-h-screen p-4 md:p-8 lg:p-12 max-w-7xl">
-        <div id="main-view">
-            <!-- Content will be injected here -->
-        </div>
-    </main>
-
-    <!-- Global Info Modal -->
-    <div id="info-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-        <div class="bg-stone-950 border border-white/5 rounded-[2.5rem] w-full max-w-lg overflow-hidden shadow-2xl scale-95 opacity-0 transition-all duration-300" id="modal-content">
-            <div class="relative h-64 bg-slate-900">
-                <button onclick="closeModal()" class="absolute top-6 right-6 z-10 w-12 h-12 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white backdrop-blur-md transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-                <img id="modal-img" src="" class="w-full h-full object-cover misted-img">
-                <div class="absolute inset-0 img-overlay flex items-end p-10">
-                    <h2 id="modal-title" class="text-3xl font-serif italic text-white leading-tight"></h2>
-                </div>
-            </div>
-            <div class="p-10">
-                <p id="modal-desc" class="text-slate-400 leading-relaxed font-medium text-lg"></p>
-                <div class="mt-10 flex gap-4">
-                    <a id="modal-map" href="" target="_blank" class="flex-1 bg-emerald-800 hover:bg-emerald-700 text-white font-bold py-4 rounded-2xl text-center transition-all shadow-xl shadow-emerald-950/50">Open in Maps</a>
-                </div>
-            </div>
-        </div>
+  const DaySection = ({ title, date, children }) => (
+    <div className="mb-8">
+      <div className="sticky top-16 z-10 py-3 mb-4 bg-[#E8ECEB]/90 backdrop-blur-sm border-b border-gray-200">
+        <h2 className="font-serif text-2xl font-bold" style={{ color: colors.text }}>{title}</h2>
+        <p className="text-xs font-medium opacity-60 uppercase tracking-widest">{date}</p>
+      </div>
+      {children}
     </div>
+  );
 
-    <script>
-        const trip = {
-            days: [
-                {
-                    id: 'day1',
-                    date: 'Thursday, Jan 1',
-                    label: 'Arrival & Grounding',
-                    events: [
-                        { time: '4:00 PM', title: 'Creamery Cottage', icon: '🏡', desc: 'Check-in. Unpack lightly, open windows, and let the space settle.', search: '38.01183,-122.66805', img: 'https://images.unsplash.com/photo-1449156001935-d2863fb72690?auto=format&fit=crop&q=80&w=800' },
-                        { time: '4:30 PM', title: 'Neighborhood Walk', icon: '🌲', desc: 'No formal trail. Walk the rural road near the cottage. No destination, no rush.', search: 'San Geronimo, CA' },
-                        { time: '7:00 PM', title: 'Station House Café', icon: '🍽️', desc: 'Confirmed. Warm, historic, slow pacing. Ideal New Year’s night anchor.', search: 'Station House Cafe Point Reyes Station' }
-                    ]
-                },
-                {
-                    id: 'day2',
-                    date: 'Friday, Jan 2',
-                    label: 'Redwoods & Bay',
-                    events: [
-                        { time: 'Morning', title: 'Cottage Coffee', icon: '☕', desc: 'No schedule. No urgency. Enjoy the silence.', search: 'San Geronimo, CA' },
-                        { time: 'Late Morning', title: "Roy's Redwoods", icon: '🌲', desc: 'Flat, quiet trails. Old-growth redwoods. Walk 45-90 mins, then stop.', search: "Roy's Redwoods Preserve", img: 'https://images.unsplash.com/photo-1547234935-80c7145ec969?auto=format&fit=crop&q=80&w=800' },
-                        { time: 'Afternoon', title: 'Chicken Ranch Beach', icon: '🌊', desc: 'Optional choice. Flat bay-side walk. Quiet and reflective.', search: 'Chicken Ranch Beach', img: 'https://images.unsplash.com/photo-1505245208761-ba872912fac0?auto=format&fit=crop&q=80&w=800' }
-                    ]
-                },
-                {
-                    id: 'day3',
-                    date: 'Saturday, Jan 3',
-                    label: 'Gentle Exit',
-                    events: [
-                        { time: '11:00 AM', title: 'Checkout', icon: '🔑', desc: 'Leave calm. Don’t squeeze anything in. Pack slowly.', search: '38.01183,-122.66805' }
-                    ]
-                }
-            ],
-            stay: {
-                name: 'Creamery Cottage',
-                address: 'San Geronimo, CA 94963',
-                notes: [
-                    'Park in the designated spot in front of the curvy steps',
-                    'Short staircase up to the cottage',
-                    'Wildlife sounds at night',
-                    'Fire pit available (winter only)'
-                ]
-            },
-            guide: {
-                food: [
-                    { name: 'Good Earth Foods', type: 'Fairfax / Natural', search: 'Good Earth Natural Foods Fairfax' },
-                    { name: 'Fradelizio’s', type: 'Fairfax / Italian', search: "Fradelizio's Fairfax" },
-                    { name: 'Gestalt Haus', type: 'Fairfax / Casual', search: 'Gestalt Haus Fairfax' },
-                    { name: 'Marshall Store', type: 'Marshall / Oysters', search: 'Marshall Store Shoreline Hwy' }
-                ],
-                spots: [
-                    { name: 'Samuel P. Taylor', type: 'Creekside Redwoods', search: 'Samuel P. Taylor State Park' },
-                    { name: 'Point Reyes Station', type: 'Historic Town', search: 'Point Reyes Station, CA' }
-                ]
-            }
-        };
+  const TimelineItem = ({ time, title, description, location, icon: Icon, warning, verified }) => (
+    <div className="relative pl-8 pb-8 border-l border-emerald-900/10 last:border-0 last:pb-0">
+      <div className="absolute -left-3 top-0 p-1.5 rounded-full bg-white border border-emerald-100 shadow-sm" style={{ color: colors.accent }}>
+        {Icon ? <Icon size={14} /> : <div className="w-3.5 h-3.5" />}
+      </div>
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-bold font-sans tracking-tighter opacity-50 uppercase">{time}</span>
+          {verified && <VerifiedBadge />}
+        </div>
+        <h3 className="font-serif text-lg font-semibold leading-tight" style={{ color: colors.text }}>{title}</h3>
+        <p className="text-sm opacity-80 leading-relaxed font-sans mt-1">{description}</p>
+        
+        {warning && (
+          <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg flex gap-3">
+            <AlertTriangle size={18} className="text-amber-600 shrink-0" />
+            <p className="text-xs text-amber-900 leading-normal">{warning}</p>
+          </div>
+        )}
 
-        const mainView = document.getElementById('main-view');
+        {location && <NavigateButton url={location} />}
+      </div>
+    </div>
+  );
 
-        const views = {
-            home: () => `
-                <div class="animate-in">
-                    <header class="mb-12">
-                        <h2 class="text-5xl font-serif italic text-white">Quiet <span class="text-emerald-600">Corners</span></h2>
-                        <p class="text-slate-500 mt-3 font-semibold uppercase tracking-[0.4em] text-[10px]">Winter in West Marin</p>
-                    </header>
+  return (
+    <div className="min-h-screen font-sans pb-32" style={{ backgroundColor: colors.bg, color: colors.text }}>
+      
+      {/* PERSISTENT HEADER: HOME BASE */}
+      <header className="sticky top-0 z-30 px-6 py-4 bg-[#E8ECEB]/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="font-serif text-xl font-bold italic">Creamery Cottage</h1>
+            <p className="text-[10px] font-medium opacity-60 uppercase tracking-tighter">San Geronimo · Jan 1–3, 2026</p>
+          </div>
+          <div className="flex flex-col items-end">
+            <span className="text-[10px] uppercase font-bold text-emerald-700">Check-in</span>
+            <span className="text-sm font-serif font-bold">4:00 PM</span>
+          </div>
+        </div>
+      </header>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Hero Status Card -->
-                        <div class="col-span-1 md:col-span-2 bento-card glass rounded-[3rem] p-10 flex flex-col justify-between min-h-[380px]">
-                            <div class="relative z-10">
-                                <span class="bg-orange-600/20 text-orange-500 border border-orange-600/30 text-[10px] font-bold uppercase tracking-[0.3em] px-4 py-2 rounded-full">Arrival Status</span>
-                                <h3 class="text-5xl font-serif italic mt-10 leading-tight text-white">Creamery Cottage<br><span class="text-slate-600">Jan 1st @ 4PM</span></h3>
-                                <p class="mt-6 text-slate-400 font-medium max-w-sm text-lg leading-relaxed">Park at the curvy steps. A short staircase leads to your forest sanctuary.</p>
-                            </div>
-                            <div class="absolute right-0 bottom-0 p-12 opacity-10">
-                                <svg class="w-64 h-64" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L4 9v12h16V9l-8-6zm0 11a3 3 0 110-6 3 3 0 010 6z"/></svg>
-                            </div>
-                        </div>
+      <main className="px-6 pt-6">
+        {activeTab === 'days' && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* THURSDAY */}
+            <DaySection title="Arrival & Landing" date="Thursday, Jan 1">
+              <TimelineItem 
+                time="4:00 PM" 
+                title="Check-in" 
+                description="Unpack lightly. Let the place go quiet."
+                icon={Home}
+                location="https://maps.google.com/?q=38.01183,-122.66805"
+              />
+              <TimelineItem 
+                time="4:30 PM" 
+                title="Neighborhood Road Walk" 
+                description="No destination. Just shake off the drive."
+                icon={Trees}
+              />
+              <TimelineItem 
+                time="7:00 PM" 
+                title="Station House Café" 
+                description="Historic room, low light, slow pacing. Your New Year’s anchor."
+                icon={Moon}
+                verified
+                location="https://maps.google.com/?q=Station+House+Cafe+Point+Reyes+Station"
+              />
+            </DaySection>
 
-                        <!-- Fire Pit Widget -->
-                        <div class="bento-card bg-orange-950/20 glass rounded-[3rem] p-10 flex flex-col justify-between fire-glow">
-                            <div class="flex justify-between items-start">
-                                <div class="text-6xl">🔥</div>
-                                <div class="text-right">
-                                    <p class="text-[10px] font-black text-orange-500 uppercase tracking-widest">Seasonal</p>
-                                    <p class="text-white font-bold">Fire Pit</p>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="text-slate-300 text-sm leading-relaxed">Available for use this winter. Perfect for an early, cozy night after the neighborhood walk.</p>
-                            </div>
-                        </div>
-
-                        <!-- Map Card -->
-                        <div onclick="navTo('map')" class="bento-card glass rounded-[3rem] p-10 lg:col-span-1 flex flex-col justify-between cursor-pointer group">
-                            <div>
-                                <h4 class="text-xl font-serif italic text-white">The Master Map</h4>
-                                <p class="text-slate-500 text-sm mt-2">All coordinates, trails, and eats synced to your Google account.</p>
-                            </div>
-                            <div class="mt-6 w-full py-4 bg-white text-black font-bold rounded-2xl text-center group-hover:bg-slate-200 transition-all">Explore Map</div>
-                        </div>
-
-                        <!-- Rules of the Coast -->
-                        <div class="bento-card glass rounded-[3rem] p-10 md:col-span-2">
-                             <div class="grid grid-cols-2 gap-8">
-                                <div>
-                                    <h5 class="text-orange-500 font-black text-[10px] uppercase tracking-widest mb-4">Final Notes</h5>
-                                    <ul class="text-sm space-y-3 text-slate-400 font-medium">
-                                        <li>• Redwoods > Coast if undecided</li>
-                                        <li>• Darkness comes fast</li>
-                                        <li>• Silence is intentional</li>
-                                    </ul>
-                                </div>
-                                <div class="flex flex-col justify-center text-right">
-                                     <h4 class="text-3xl font-serif italic text-white">Slow Pacing</h4>
-                                     <p class="text-slate-500 text-xs mt-2">"One main outing per day is enough"</p>
-                                </div>
-                             </div>
-                        </div>
+            {/* FRIDAY ACCORDION */}
+            <DaySection title="Redwoods & Coast" date="Friday, Jan 2">
+              <div className="space-y-4 mb-4">
+                {/* MORNING */}
+                <div className="bg-white/50 border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+                  <button 
+                    onClick={() => setOpenAccordion(openAccordion === 'morning' ? null : 'morning')}
+                    className="w-full px-5 py-4 flex items-center justify-between text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Trees className="text-emerald-700" size={20} />
+                      <span className="font-serif font-bold">Morning: Roy's Redwoods</span>
                     </div>
-                </div>
-            `,
-            itinerary: () => `
-                <div class="animate-in max-w-5xl mx-auto">
-                    <header class="mb-16">
-                        <h2 class="text-4xl font-serif italic text-white text-center">The West Marin <span class="text-emerald-700">Journal</span></h2>
-                    </header>
-
-                    <div class="space-y-24">
-                        ${trip.days.map((day, idx) => `
-                            <section>
-                                <div class="flex items-center gap-8 mb-10">
-                                    <div class="text-7xl font-serif font-bold text-slate-900/50 outline-text">${String(idx + 1).padStart(2, '0')}</div>
-                                    <div>
-                                        <h4 class="text-3xl font-bold text-white">${day.label}</h4>
-                                        <p class="text-emerald-700 font-bold uppercase tracking-[0.3em] text-[10px] mt-1">${day.date}</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    ${day.events.map(event => `
-                                        <div onclick="openEvent('${event.title}', '${event.desc}', '${event.search}', '${event.img || ''}')" class="group bento-card glass rounded-[2.5rem] p-10 cursor-pointer">
-                                            <div class="flex justify-between items-start mb-6">
-                                                <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">${event.time}</span>
-                                                <span class="text-3xl grayscale group-hover:grayscale-0 transition-all">${event.icon}</span>
-                                            </div>
-                                            <h5 class="text-2xl font-serif italic text-white">${event.title}</h5>
-                                            <p class="text-slate-500 mt-4 leading-relaxed font-medium">${event.desc}</p>
-                                            <div class="mt-8 flex items-center text-xs font-bold text-slate-600 group-hover:text-emerald-500 transition-colors">
-                                                View Details <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </section>
-                        `).join('')}
+                    {openAccordion === 'morning' ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}
+                  </button>
+                  {openAccordion === 'morning' && (
+                    <div className="px-5 pb-5 animate-in slide-in-from-top-2 duration-300">
+                      <p className="text-sm mb-4">Flat trails, creek crossings, real quiet. 45–90 minutes.</p>
+                      <NavigateButton url="https://maps.google.com/?q=Roy%27s+Redwoods+Preserve" />
                     </div>
+                  )}
                 </div>
-            `,
-            map: () => `
-                <div class="animate-in h-[calc(100vh-12rem)] flex flex-col">
-                    <header class="mb-8">
-                        <h2 class="text-4xl font-serif italic text-white">Master <span class="text-emerald-700">Reference</span></h2>
-                    </header>
-                    <div class="glass rounded-[2.5rem] overflow-hidden p-2 flex-1 shadow-2xl">
-                        <iframe 
-                            src="https://www.google.com/maps/d/u/1/embed?mid=1-YIOan-toj1J7UnTdvnM8ayFENyVumU&ehbc=2E312F" 
-                            width="100%" 
-                            height="100%" 
-                            style="border:0; border-radius: 2rem;" 
-                            allowfullscreen="" 
-                            loading="lazy">
-                        </iframe>
+
+                {/* LUNCH CHOICE CARDS */}
+                <div className="bg-white/50 border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+                  <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Coffee className="text-emerald-700" size={20} />
+                      <span className="font-serif font-bold">Lunch Options</span>
                     </div>
-                </div>
-            `,
-            hub: () => `
-                <div class="animate-in max-w-4xl mx-auto">
-                    <header class="mb-12 text-center">
-                        <h2 class="text-4xl font-serif italic text-white">The <span class="text-emerald-700">Cottage</span></h2>
-                    </header>
-
-                    <div class="glass rounded-[3rem] overflow-hidden">
-                        <div class="h-64 bg-slate-800">
-                            <img src="https://images.unsplash.com/photo-1449156001935-d2863fb72690?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover misted-img">
-                        </div>
-                        <div class="p-12">
-                            <div class="flex flex-col md:flex-row justify-between gap-10">
-                                <div class="flex-1">
-                                    <h4 class="text-3xl font-serif italic font-bold text-white">${trip.stay.name}</h4>
-                                    <p class="text-slate-500 mt-2 font-medium">${trip.stay.address}</p>
-                                    <div class="mt-8 space-y-4">
-                                        ${trip.stay.notes.map(note => `
-                                            <div class="flex gap-4 text-slate-400 font-medium">
-                                                <span class="text-emerald-700">🌲</span>
-                                                <p>${note}</p>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                                <div class="w-full md:w-1/3 flex flex-col gap-4">
-                                    <div class="p-6 bg-white/5 rounded-3xl border border-white/5 text-center">
-                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Check-in</p>
-                                        <p class="text-2xl font-serif italic text-white">4:00 PM</p>
-                                    </div>
-                                    <div class="p-6 bg-white/5 rounded-3xl border border-white/5 text-center">
-                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Check-out</p>
-                                        <p class="text-2xl font-serif italic text-white">11:00 AM</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div className="flex bg-gray-200 p-1 rounded-lg">
+                      <button 
+                        onClick={() => setLunchOption('A')}
+                        className={`px-3 py-1 text-[10px] font-bold uppercase rounded-md transition-all ${lunchOption === 'A' ? 'bg-white shadow-sm' : 'opacity-50'}`}
+                      >Fairfax</button>
+                      <button 
+                        onClick={() => setLunchOption('B')}
+                        className={`px-3 py-1 text-[10px] font-bold uppercase rounded-md transition-all ${lunchOption === 'B' ? 'bg-white shadow-sm' : 'opacity-50'}`}
+                      >Cottage</button>
                     </div>
+                  </div>
+                  <div className="p-5">
+                    {lunchOption === 'A' ? (
+                      <div className="space-y-3">
+                        <p className="text-xs font-medium uppercase opacity-50 mb-2">Fairfax (10 min away)</p>
+                        <div className="grid grid-cols-1 gap-2">
+                          <a href="https://maps.google.com/?q=Good+Earth+Natural+Foods+Fairfax" target="_blank" className="p-3 bg-white rounded-xl border border-gray-100 flex items-center justify-between">
+                            <span className="text-sm font-medium">Good Earth Foods</span>
+                            <ExternalLink size={14} className="opacity-30" />
+                          </a>
+                          <a href="https://maps.google.com/?q=Barefoot+Cafe+Fairfax" target="_blank" className="p-3 bg-white rounded-xl border border-gray-100 flex items-center justify-between">
+                            <span className="text-sm font-medium">Barefoot Café</span>
+                            <ExternalLink size={14} className="opacity-30" />
+                          </a>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center py-4 text-center">
+                        <Home className="mb-2 opacity-20" size={32} />
+                        <p className="text-sm font-medium italic">Easy afternoon back at the cottage base.</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
-            `,
-            guide: () => `
-                <div class="animate-in">
-                    <header class="mb-16">
-                        <h2 class="text-4xl font-serif italic text-white">West Marin <span class="text-emerald-700">Guide</span></h2>
-                        <p class="text-slate-500 mt-2">Curated provisions and hidden paths.</p>
-                    </header>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                        <div>
-                            <h3 class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-800 mb-10 flex items-center gap-4">
-                                Fairfax Provisions
-                                <div class="h-px bg-emerald-900 flex-1"></div>
-                            </h3>
-                            <div class="space-y-4">
-                                ${trip.guide.food.map(f => `
-                                    <div onclick="openEvent('${f.name}', 'Recommended West Marin stop. Slow down and enjoy the local flavors.', '${f.search}')" class="group glass p-8 rounded-[2.5rem] flex items-center justify-between hover:border-emerald-700 transition-all cursor-pointer">
-                                        <div>
-                                            <h5 class="text-xl font-serif italic text-white">${f.name}</h5>
-                                            <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">${f.type}</p>
-                                        </div>
-                                        <div class="w-12 h-12 border border-slate-800 rounded-full flex items-center justify-center group-hover:bg-emerald-800 group-hover:border-emerald-800 transition-all">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
 
-                        <div>
-                            <h3 class="text-[10px] font-black uppercase tracking-[0.4em] text-emerald-800 mb-10 flex items-center gap-4">
-                                Wilderness Trails
-                                <div class="h-px bg-emerald-900 flex-1"></div>
-                            </h3>
-                            <div class="space-y-4">
-                                ${trip.guide.spots.map(s => `
-                                    <div onclick="openEvent('${s.name}', 'A quintessential West Marin experience. Silence here is intentional.', '${s.search}')" class="group glass p-8 rounded-[2.5rem] flex items-center justify-between hover:border-blue-900 transition-all cursor-pointer">
-                                        <div>
-                                            <h5 class="text-xl font-serif italic text-white">${s.name}</h5>
-                                            <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">${s.type}</p>
-                                        </div>
-                                        <div class="w-12 h-12 border border-slate-800 rounded-full flex items-center justify-center group-hover:bg-blue-900 group-hover:border-blue-900 transition-all">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
+                {/* AFTERNOON */}
+                <div className="bg-white/50 border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+                  <button 
+                    onClick={() => setOpenAccordion(openAccordion === 'afternoon' ? null : 'afternoon')}
+                    className="w-full px-5 py-4 flex items-center justify-between text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Waves className="text-emerald-700" size={20} />
+                      <span className="font-serif font-bold">Afternoon: Coastal Loop</span>
                     </div>
+                    {openAccordion === 'afternoon' ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}
+                  </button>
+                  {openAccordion === 'afternoon' && (
+                    <div className="px-5 pb-5 space-y-6 animate-in slide-in-from-top-2 duration-300">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="w-5 h-5 rounded-full bg-emerald-900 text-white flex items-center justify-center text-[10px] font-bold">1</div>
+                          <h4 className="font-bold text-sm">Chicken Ranch Beach</h4>
+                        </div>
+                        <p className="text-xs opacity-70 italic mb-2">Flat bay walk. Calm water. Reset.</p>
+                        <NavigateButton url="https://maps.google.com/?q=38.0709,-122.8795" />
+                      </div>
+
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="w-5 h-5 rounded-full bg-emerald-900 text-white flex items-center justify-center text-[10px] font-bold">2</div>
+                          <h4 className="font-bold text-sm">Cypress Tree Tunnel</h4>
+                        </div>
+                        <p className="text-xs opacity-70 italic mb-2">Visual punctuation — 10-15 mins.</p>
+                        <NavigateButton url="https://maps.google.com/?q=Cypress+Tree+Tunnel" />
+                      </div>
+
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="w-5 h-5 rounded-full bg-emerald-900 text-white flex items-center justify-center text-[10px] font-bold">3</div>
+                          <h4 className="font-bold text-sm">Point Reyes Lighthouse</h4>
+                        </div>
+                        <p className="text-xs opacity-70 italic mb-2">Closes ~4 PM. Dramatic cliffs.</p>
+                        <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg flex gap-3 mb-2">
+                          <AlertTriangle size={18} className="text-amber-600 shrink-0" />
+                          <p className="text-xs text-amber-900">300+ steps down (and back up). Wind is serious. Stay only while it feels powerful.</p>
+                        </div>
+                        <NavigateButton url="https://maps.google.com/?q=Point+Reyes+Lighthouse" />
+                      </div>
+                    </div>
+                  )}
                 </div>
-            `
-        };
 
-        function navTo(viewKey) {
-            mainView.classList.add('fade-out');
+                {/* EVENING */}
+                <div className="bg-white/50 border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+                  <button 
+                    onClick={() => setOpenAccordion(openAccordion === 'evening' ? null : 'evening')}
+                    className="w-full px-5 py-4 flex items-center justify-between text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Moon className="text-emerald-700" size={20} />
+                      <span className="font-serif font-bold">Evening: Back Inland</span>
+                    </div>
+                    {openAccordion === 'evening' ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}
+                  </button>
+                  {openAccordion === 'evening' && (
+                    <div className="px-5 pb-5 animate-in slide-in-from-top-2 duration-300">
+                      <p className="text-sm mb-4 italic">Dinner at cottage or Fairfax options like Fradelizio’s or Gestalt Haus.</p>
+                      <div className="flex items-center gap-2 text-xs font-medium text-emerald-800">
+                        <Info size={14} />
+                        Drive back before dark recommended.
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </DaySection>
 
-            setTimeout(() => {
-                document.querySelectorAll('.nav-btn').forEach(btn => {
-                    if (btn.dataset.view === viewKey) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
+            {/* SATURDAY */}
+            <DaySection title="Leave Clean" date="Saturday, Jan 3">
+              <TimelineItem 
+                time="Morning" 
+                title="Slow Start" 
+                description="Coffee, pack slowly, one last short road walk."
+                icon={Coffee}
+              />
+              <TimelineItem 
+                time="11:00 AM" 
+                title="Check-out" 
+                description="Leave without squeezing. That’s success."
+                icon={ExternalLink}
+                location="https://maps.google.com/?q=38.01183,-122.66805"
+              />
+            </DaySection>
+          </div>
+        )}
 
-                mainView.innerHTML = views[viewKey]();
-                mainView.classList.remove('fade-out');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 300);
-        }
+        {activeTab === 'map' && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 pb-10">
+            <h2 className="font-serif text-2xl font-bold mb-6">Quick Links</h2>
+            <div className="space-y-3">
+              {[
+                { name: "Creamery Cottage", url: "https://maps.google.com/?q=38.01183,-122.66805" },
+                { name: "Station House Café", url: "https://maps.google.com/?q=Station+House+Cafe+Point+Reyes+Station" },
+                { name: "Roy’s Redwoods", url: "https://maps.google.com/?q=Roy%27s+Redwoods+Preserve" },
+                { name: "Chicken Ranch Beach", url: "https://maps.google.com/?q=38.0709,-122.8795" },
+                { name: "Cypress Tree Tunnel", url: "https://maps.google.com/?q=Cypress+Tree+Tunnel" },
+                { name: "Point Reyes Lighthouse", url: "https://maps.google.com/?q=Point+Reyes+Lighthouse" },
+              ].map((loc, i) => (
+                <a key={i} href={loc.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <MapPin size={18} className="text-emerald-700" />
+                    <span className="font-medium text-sm">{loc.name}</span>
+                  </div>
+                  <Navigation size={16} className="opacity-30" />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
 
-        function openEvent(title, desc, search, img) {
-            const modal = document.getElementById('info-modal');
-            const content = document.getElementById('modal-content');
-            
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-desc').innerText = desc;
-            document.getElementById('modal-img').src = img || 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
-            document.getElementById('modal-map').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(search || title)}`;
-            
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                content.classList.remove('scale-95', 'opacity-0');
-            }, 10);
-        }
+        {activeTab === 'info' && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <h2 className="font-serif text-2xl font-bold mb-6">Cottage Details</h2>
+            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 space-y-6">
+              <div>
+                <h4 className="text-[10px] font-bold uppercase opacity-50 mb-2">Location</h4>
+                <p className="font-serif text-lg leading-tight">San Geronimo / Lagunitas, CA 94963</p>
+              </div>
+              <div>
+                <h4 className="text-[10px] font-bold uppercase opacity-50 mb-2">Expectations</h4>
+                <ul className="space-y-3">
+                  {[
+                    "Quiet rural road & redwoods",
+                    "Creeks & wildlife viewing",
+                    "Fire pit available (weather permitting)",
+                    "Strictly no parties"
+                  ].map((text, i) => (
+                    <li key={i} className="flex items-center gap-3 text-sm">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                      {text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                <div>
+                  <h4 className="text-[10px] font-bold uppercase opacity-50 mb-1">Check-in</h4>
+                  <p className="text-sm font-bold">Jan 1, 4:00 PM</p>
+                </div>
+                <div>
+                  <h4 className="text-[10px] font-bold uppercase opacity-50 mb-1">Check-out</h4>
+                  <p className="text-sm font-bold">Jan 3, 11:00 AM</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
 
-        function closeModal() {
-            const modal = document.getElementById('info-modal');
-            const content = document.getElementById('modal-content');
-            content.classList.add('scale-95', 'opacity-0');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        }
+      {/* BOTTOM NAVIGATION */}
+      <nav className="fixed bottom-6 left-6 right-6 z-50">
+        <div className="bg-[#2D3A30]/90 backdrop-blur-xl border border-white/10 rounded-full shadow-2xl px-2 py-2 flex items-center justify-between">
+          <button 
+            onClick={() => setActiveTab('days')}
+            className={`flex-1 flex flex-col items-center py-2 transition-all rounded-full ${activeTab === 'days' ? 'bg-white/10 text-white' : 'text-white/40'}`}
+          >
+            <Calendar size={20} />
+            <span className="text-[10px] mt-1 font-bold uppercase tracking-tighter">Itinerary</span>
+          </button>
+          
+          <button 
+            onClick={() => setActiveTab('map')}
+            className={`flex-1 flex flex-col items-center py-2 transition-all rounded-full ${activeTab === 'map' ? 'bg-white/10 text-white' : 'text-white/40'}`}
+          >
+            <MapPin size={20} />
+            <span className="text-[10px] mt-1 font-bold uppercase tracking-tighter">Places</span>
+          </button>
+          
+          <button 
+            onClick={() => setActiveTab('info')}
+            className={`flex-1 flex flex-col items-center py-2 transition-all rounded-full ${activeTab === 'info' ? 'bg-white/10 text-white' : 'text-white/40'}`}
+          >
+            <Home size={20} />
+            <span className="text-[10px] mt-1 font-bold uppercase tracking-tighter">Cottage</span>
+          </button>
+        </div>
+      </nav>
 
-        window.onload = () => {
-            navTo('home');
-        };
-    </script>
-</body>
-</html>
+    </div>
+  );
+};
+
+export default App;

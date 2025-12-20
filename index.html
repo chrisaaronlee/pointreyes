@@ -29,9 +29,7 @@
                         ember: '#D97706',
                     },
                     fontFamily: {
-                        // Editorial High-Contrast Serif
                         serif: ['Newsreader', 'serif'],
-                        // Modern Clean Sans
                         sans: ['Satoshi', 'sans-serif'],
                     }
                 }
@@ -45,7 +43,7 @@
             font-family: 'Satoshi', sans-serif;
             -webkit-font-smoothing: antialiased;
         }
-        h1, h2, h3 {
+        h1, h2, h3, h4 {
             font-family: 'Newsreader', serif;
             letter-spacing: -0.02em;
         }
@@ -54,7 +52,6 @@
         .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Custom typography tweaks for that "Editorial" feel */
         .editorial-caps {
             font-family: 'Satoshi', sans-serif;
             text-transform: uppercase;
@@ -78,19 +75,31 @@
             return <i data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
         };
 
-        const NavigateButton = ({ url }) => (
-            <a 
-                href={url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3.5 mt-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50 active:scale-[0.98] transition-all text-sm font-bold tracking-tight text-forest"
-            >
-                <Icon name="navigation" size={16} className="text-emerald-700" />
-                Navigate
-            </a>
+        const ActionButtons = ({ navigateUrl, instagramUrl }) => (
+            <div className="flex gap-2 mt-3">
+                <a 
+                    href={navigateUrl} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex-grow flex items-center justify-center gap-2 py-3.5 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50 active:scale-[0.98] transition-all text-sm font-bold tracking-tight text-forest"
+                >
+                    <Icon name="navigation" size={16} className="text-emerald-700" />
+                    Navigate
+                </a>
+                {instagramUrl && (
+                    <a 
+                        href={instagramUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="w-14 flex items-center justify-center py-3.5 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50 active:scale-[0.98] transition-all text-forest"
+                    >
+                        <Icon name="instagram" size={20} className="text-ember" />
+                    </a>
+                )}
+            </div>
         );
 
-        const TimelineItem = ({ time, title, description, location, icon, warning, verified }) => (
+        const TimelineItem = ({ time, title, description, location, instagram, icon, warning, verified }) => (
             <div className="relative pl-8 pb-10 border-l border-emerald-900/10 last:border-0 last:pb-0">
                 <div className="absolute -left-3 top-0 p-1.5 rounded-full bg-white border border-emerald-100 shadow-sm text-ember">
                     <Icon name={icon || "circle"} size={14} />
@@ -114,7 +123,7 @@
                         </div>
                     )}
 
-                    {location && <NavigateButton url={location} />}
+                    {location && <ActionButtons navigateUrl={location} instagramUrl={instagram} />}
                 </div>
             </div>
         );
@@ -123,11 +132,13 @@
             const [activeTab, setActiveTab] = useState('days');
             const [openAccordion, setOpenAccordion] = useState('morning');
             const [lunchOption, setLunchOption] = useState('A');
+            const [saturdayOption, setSaturdayOption] = useState('A');
             const [expandedGroups, setExpandedGroups] = useState({
                 'Home': false,
                 'Dining': false,
                 'Nature': false,
-                'Coast': false
+                'Coast': false,
+                'Community': false
             });
 
             const toggleGroup = (group) => {
@@ -138,21 +149,93 @@
                 'Home': { icon: '🏡', color: 'text-blue-900' },
                 'Dining': { icon: '🍽️', color: 'text-amber-900' },
                 'Nature': { icon: '🌲', color: 'text-emerald-900' },
-                'Coast': { icon: '🌊', color: 'text-cyan-900' }
+                'Coast': { icon: '🌊', color: 'text-cyan-900' },
+                'Community': { icon: '👨‍🌾', color: 'text-orange-900' }
             };
 
             const places = [
-                { name: "Creamery Cottage", url: "https://maps.google.com/?q=38.01183,-122.66805", cat: "Home", icon: "home" },
-                { name: "Station House Café", url: "https://maps.google.com/?q=Station+House+Cafe+Point+Reyes+Station", cat: "Dining", icon: "coffee" },
-                { name: "Good Earth Fairfax", url: "https://maps.google.com/?q=Good+Earth+Natural+Foods+Fairfax", cat: "Dining", icon: "shopping-bag" },
-                { name: "Barefoot Café", url: "https://maps.google.com/?q=Barefoot+Cafe+Fairfax", cat: "Dining", icon: "coffee" },
-                { name: "Stillwater Fairfax", url: "https://maps.google.com/?q=Stillwater+Fairfax+CA", cat: "Dining", icon: "utensils" },
-                { name: "Fradelizio’s", url: "https://maps.google.com/?q=Fradelizio%27s+Fairfax", cat: "Dining", icon: "utensils" },
-                { name: "Gestalt Haus", url: "https://maps.google.com/?q=Gestalt+Haus+Fairfax", cat: "Dining", icon: "beer" },
-                { name: "Roy’s Redwoods", url: "https://maps.google.com/?q=Roy%27s+Redwoods+Preserve", cat: "Nature", icon: "trees" },
-                { name: "Cypress Tree Tunnel", url: "https://maps.google.com/?q=Cypress+Tree+Tunnel", cat: "Nature", icon: "camera" },
-                { name: "Chicken Ranch Beach", url: "https://maps.google.com/?q=38.0709,-122.8795", cat: "Coast", icon: "waves" },
-                { name: "Point Reyes Lighthouse", url: "https://maps.google.com/?q=Point+Reyes+Lighthouse", cat: "Coast", icon: "wind" },
+                { 
+                    name: "Creamery Cottage", 
+                    url: "https://maps.google.com/?q=38.01183,-122.66805", 
+                    cat: "Home", 
+                    icon: "home" 
+                },
+                { 
+                    name: "Station House Café", 
+                    url: "https://maps.google.com/?q=Station+House+Cafe+Point+Reyes+Station", 
+                    cat: "Dining", 
+                    icon: "coffee",
+                    instagram: "https://www.instagram.com/stationhousecafe/" 
+                },
+                { 
+                    name: "Bovine Bakery", 
+                    url: "https://maps.google.com/?q=Bovine+Bakery+Point+Reyes+Station", 
+                    cat: "Dining", 
+                    icon: "croissant",
+                    instagram: "https://www.instagram.com/bovine_bakeryptreyes/?hl=en"
+                },
+                { 
+                    name: "Point Reyes Farmers Market", 
+                    url: "https://maps.google.com/?q=Point+Reyes+Farmers+Market", 
+                    cat: "Community", 
+                    icon: "shopping-bag",
+                    instagram: "https://www.instagram.com/point_reyes_farmers_market/?hl=en"
+                },
+                { 
+                    name: "Good Earth Fairfax", 
+                    url: "https://maps.google.com/?q=Good+Earth+Natural+Foods+Fairfax", 
+                    cat: "Dining", 
+                    icon: "shopping-bag",
+                    instagram: "https://www.instagram.com/goodearthnatural/?hl=en" 
+                },
+                { 
+                    name: "Stillwater Fairfax", 
+                    url: "https://maps.google.com/?q=Stillwater+Fairfax+CA", 
+                    cat: "Dining", 
+                    icon: "utensils",
+                    instagram: "https://www.instagram.com/stillwatermarin/"
+                },
+                { 
+                    name: "Fradelizio’s", 
+                    url: "https://maps.google.com/?q=Fradelizio%27s+Fairfax", 
+                    cat: "Dining", 
+                    icon: "utensils",
+                    instagram: "https://www.instagram.com/fradeliziosinfairfax/?hl=en"
+                },
+                { 
+                    name: "Gestalt Haus", 
+                    url: "https://maps.google.com/?q=Gestalt+Haus+Fairfax", 
+                    cat: "Dining", 
+                    icon: "beer",
+                    instagram: "https://www.instagram.com/gestalthaus/?hl=en"
+                },
+                { 
+                    name: "Roy’s Redwoods", 
+                    url: "https://maps.google.com/?q=Roy%27s+Redwoods+Preserve", 
+                    cat: "Nature", 
+                    icon: "trees",
+                    instagram: "https://www.instagram.com/explore/locations/7022266/roys-redwoods-preserve/"
+                },
+                { 
+                    name: "Cypress Tree Tunnel", 
+                    url: "https://maps.google.com/?q=Cypress+Tree+Tunnel", 
+                    cat: "Nature", 
+                    icon: "camera" 
+                },
+                { 
+                    name: "Chicken Ranch Beach", 
+                    url: "https://maps.google.com/?q=38.0709,-122.8795", 
+                    cat: "Coast", 
+                    icon: "waves",
+                    instagram: "https://www.instagram.com/explore/locations/5001670/chicken-ranch-beach/"
+                },
+                { 
+                    name: "Point Reyes Lighthouse", 
+                    url: "https://maps.google.com/?q=Point+Reyes+Lighthouse", 
+                    cat: "Coast", 
+                    icon: "wind",
+                    instagram: "https://www.instagram.com/pointreyesnps/?hl=en"
+                },
             ];
 
             const groupedPlaces = places.reduce((acc, place) => {
@@ -164,15 +247,15 @@
             return (
                 <div className="min-h-screen pb-32">
                     {/* PERSISTENT HEADER */}
-                    <header className="sticky top-0 z-30 px-6 py-5 sticky-header border-b border-gray-200/50 shadow-sm">
+                    <header className="sticky top-0 z-30 px-6 py-5 sticky-header border-b border-gray-200/50 shadow-sm text-forest">
                         <div className="flex items-center justify-between max-w-lg mx-auto">
                             <div>
-                                <h1 className="text-2xl font-bold text-forest italic">Point Reyes</h1>
+                                <h1 className="text-2xl font-bold italic tracking-tight">Point Reyes</h1>
                                 <p className="editorial-caps text-[8px] opacity-40 mt-1">San Geronimo · Jan 1–3, 2026</p>
                             </div>
                             <div className="flex flex-col items-end">
                                 <span className="editorial-caps text-[8px] text-emerald-700">Check-in</span>
-                                <span className="text-base font-bold text-forest">4:00 PM</span>
+                                <span className="text-base font-bold">4:00 PM</span>
                             </div>
                         </div>
                     </header>
@@ -206,6 +289,7 @@
                                         icon="moon"
                                         verified
                                         location="https://maps.google.com/?q=Station+House+Cafe+Point+Reyes+Station"
+                                        instagram="https://www.instagram.com/stationhousecafe/"
                                     />
                                 </section>
 
@@ -217,7 +301,6 @@
                                     </div>
 
                                     <div className="space-y-4">
-                                        {/* MORNING */}
                                         <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm text-forest transition-all">
                                             <button onClick={() => setOpenAccordion(openAccordion === 'morning' ? null : 'morning')} className="w-full px-5 py-5 flex items-center justify-between active:bg-gray-50">
                                                 <div className="flex items-center gap-4">
@@ -229,12 +312,14 @@
                                             {openAccordion === 'morning' && (
                                                 <div className="px-5 pb-5 animate-in slide-in-from-top-2 duration-300">
                                                     <p className="text-[14px] leading-relaxed opacity-70 mb-4">Flat trails, creek crossings, real quiet. 45–90 minutes.</p>
-                                                    <NavigateButton url="https://maps.google.com/?q=Roy%27s+Redwoods+Preserve" />
+                                                    <ActionButtons 
+                                                        navigateUrl="https://maps.google.com/?q=Roy%27s+Redwoods+Preserve" 
+                                                        instagramUrl="https://www.instagram.com/explore/locations/7022266/roys-redwoods-preserve/" 
+                                                    />
                                                 </div>
                                             )}
                                         </div>
 
-                                        {/* LUNCH */}
                                         <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm text-forest">
                                             <div className="px-5 py-5 border-b border-gray-50 flex items-center justify-between">
                                                 <div className="flex items-center gap-4">
@@ -249,15 +334,13 @@
                                             <div className="p-5">
                                                 {lunchOption === 'A' ? (
                                                     <div className="grid grid-cols-1 gap-2.5">
-                                                        <a href="https://maps.google.com/?q=Good+Earth+Natural+Foods+Fairfax" target="_blank" className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100 flex justify-between text-[13px] font-bold">Good Earth Foods <Icon name="external-link" size={14} className="opacity-20" /></a>
-                                                        <a href="https://maps.google.com/?q=Barefoot+Cafe+Fairfax" target="_blank" className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100 flex justify-between text-[13px] font-bold">Barefoot Café <Icon name="external-link" size={14} className="opacity-20" /></a>
-                                                        <a href="https://maps.google.com/?q=Stillwater+Fairfax+CA" target="_blank" className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100 flex justify-between text-[13px] font-bold">Stillwater <Icon name="external-link" size={14} className="opacity-20" /></a>
+                                                        <a href="https://www.instagram.com/goodearthnatural/?hl=en" target="_blank" className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100 flex justify-between text-[13px] font-bold">Good Earth <Icon name="instagram" size={14} className="opacity-40" /></a>
+                                                        <a href="https://www.instagram.com/stillwater_fairfax/" target="_blank" className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100 flex justify-between text-[13px] font-bold">Stillwater <Icon name="instagram" size={14} className="opacity-40" /></a>
                                                     </div>
                                                 ) : <p className="text-sm text-center italic py-4 opacity-50 font-serif">A quiet afternoon back at the cottage base.</p>}
                                             </div>
                                         </div>
 
-                                        {/* COASTAL */}
                                         <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm text-forest">
                                             <button onClick={() => setOpenAccordion(openAccordion === 'afternoon' ? null : 'afternoon')} className="w-full px-5 py-5 flex items-center justify-between active:bg-gray-50">
                                                 <div className="flex items-center gap-4">
@@ -269,22 +352,28 @@
                                             {openAccordion === 'afternoon' && (
                                                 <div className="px-5 pb-5 space-y-8 animate-in slide-in-from-top-2 duration-300">
                                                     <div>
-                                                        <h4 className="text-base font-bold mb-1 tracking-tight">Chicken Ranch Beach</h4>
-                                                        <p className="text-xs opacity-60 mb-3">Tomales Bay walk. Reset the system.</p>
-                                                        <NavigateButton url="https://maps.google.com/?q=38.0709,-122.8795" />
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight text-forest">Chicken Ranch Beach</h4>
+                                                        <p className="text-xs opacity-60 mb-3 font-sans leading-relaxed">Tomales Bay walk. Reset the system.</p>
+                                                        <ActionButtons 
+                                                            navigateUrl="https://maps.google.com/?q=38.0709,-122.8795" 
+                                                            instagramUrl="https://www.instagram.com/explore/locations/5001670/chicken-ranch-beach/"
+                                                        />
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-base font-bold mb-1 tracking-tight">Cypress Tree Tunnel</h4>
-                                                        <p className="text-xs opacity-60 mb-3">Visual punctuation — no lingering.</p>
-                                                        <NavigateButton url="https://maps.google.com/?q=Cypress+Tree+Tunnel" />
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight text-forest">Cypress Tree Tunnel</h4>
+                                                        <p className="text-xs opacity-60 mb-3 font-sans leading-relaxed">Visual punctuation — no lingering.</p>
+                                                        <ActionButtons navigateUrl="https://maps.google.com/?q=Cypress+Tree+Tunnel" />
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-base font-bold mb-1 tracking-tight">Point Reyes Lighthouse</h4>
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight text-forest">Point Reyes Lighthouse</h4>
                                                         <div className="mt-2 p-4 bg-amber-50/50 border border-amber-200/60 rounded-xl flex gap-3 mb-3">
                                                             <Icon name="alert-triangle" size={18} className="text-amber-600 shrink-0" />
-                                                            <p className="text-xs text-amber-900 font-bold leading-normal">300+ steps down/up. Serious wind. Punishing if you linger.</p>
+                                                            <p className="text-xs text-amber-900 font-bold leading-normal">300+ steps down/up. Serious wind.</p>
                                                         </div>
-                                                        <NavigateButton url="https://maps.google.com/?q=Point+Reyes+Lighthouse" />
+                                                        <ActionButtons 
+                                                            navigateUrl="https://maps.google.com/?q=Point+Reyes+Lighthouse" 
+                                                            instagramUrl="https://www.instagram.com/pointreyesnps/?hl=en"
+                                                        />
                                                     </div>
                                                 </div>
                                             )}
@@ -293,24 +382,62 @@
                                 </section>
 
                                 {/* SATURDAY */}
-                                <section>
+                                <section className="mb-12">
                                     <div className="sticky top-[73px] z-10 py-4 mb-6 bg-fog/95 backdrop-blur-sm border-b border-gray-200/30">
                                         <h2 className="text-3xl font-bold text-forest">Gentle Departure</h2>
                                         <p className="editorial-caps text-[9px] opacity-40">Saturday, Jan 3</p>
                                     </div>
-                                    <TimelineItem 
-                                        time="Morning" 
-                                        title="Slow Start" 
-                                        description="Coffee, pack slowly, one last road walk."
-                                        icon="coffee"
-                                    />
-                                    <TimelineItem 
-                                        time="11:00 AM" 
-                                        title="Check-out" 
-                                        description="Leave without squeezing. That's success."
-                                        icon="external-link"
-                                        location="https://maps.google.com/?q=38.01183,-122.66805"
-                                    />
+
+                                    <div className="space-y-4">
+                                        {/* SATURDAY MORNING CHOICE */}
+                                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm text-forest">
+                                            <div className="px-5 py-5 border-b border-gray-50 flex items-center justify-between">
+                                                <div className="flex items-center gap-4">
+                                                    <Icon name="sun" className="text-emerald-700" size={20} />
+                                                    <span className="text-lg font-bold tracking-tight">Morning Selection</span>
+                                                </div>
+                                                <div className="flex bg-gray-100 p-1 rounded-lg">
+                                                    <button onClick={() => setSaturdayOption('A')} className={`px-3 py-1.5 text-[9px] editorial-caps rounded-md transition-all ${saturdayOption === 'A' ? 'bg-white shadow-sm opacity-100' : 'opacity-40'}`}>Bakery</button>
+                                                    <button onClick={() => setSaturdayOption('B')} className={`px-3 py-1.5 text-[9px] editorial-caps rounded-md transition-all ${saturdayOption === 'B' ? 'bg-white shadow-sm opacity-100' : 'opacity-40'}`}>Market</button>
+                                                </div>
+                                            </div>
+                                            <div className="p-5">
+                                                {saturdayOption === 'A' ? (
+                                                    <div className="animate-in fade-in duration-300">
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight">Bovine Bakery</h4>
+                                                        <p className="text-[14px] leading-relaxed opacity-70 mb-4 font-sans">Mandatory stop. Grab a coffee and their famous morning bun.</p>
+                                                        <ActionButtons 
+                                                            navigateUrl="https://maps.google.com/?q=Bovine+Bakery+Point+Reyes+Station" 
+                                                            instagramUrl="https://www.instagram.com/bovine_bakeryptreyes/?hl=en"
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    <div className="animate-in fade-in duration-300">
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight">Farmers Market</h4>
+                                                        <p className="text-[14px] leading-relaxed opacity-70 mb-4 font-sans">Organic local produce, artisanal crafts, and the heart of the community.</p>
+                                                        <ActionButtons 
+                                                            navigateUrl="https://maps.google.com/?q=Point+Reyes+Farmers+Market" 
+                                                            instagramUrl="https://www.instagram.com/point_reyes_farmers_market/?hl=en"
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <TimelineItem 
+                                            time="9:30 AM" 
+                                            title="Town Loop" 
+                                            description="One last slow road walk around the station before heading out."
+                                            icon="map"
+                                        />
+                                        <TimelineItem 
+                                            time="11:00 AM" 
+                                            title="Check-out" 
+                                            description="Leave without squeezing. That's success."
+                                            icon="external-link"
+                                            location="https://maps.google.com/?q=38.01183,-122.66805"
+                                        />
+                                    </div>
                                 </section>
                             </div>
                         )}
@@ -335,13 +462,24 @@
                                             {expandedGroups[category] && (
                                                 <div className="grid grid-cols-1 gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
                                                     {groupedPlaces[category].map((loc, i) => (
-                                                        <a key={i} href={loc.url} target="_blank" className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-100 active:bg-gray-50 transition-colors">
-                                                            <div className="flex items-center gap-4">
-                                                                <Icon name={loc.icon || "map-pin"} className="text-emerald-700 opacity-60" size={18} />
-                                                                <span className="font-bold text-sm text-forest tracking-tight">{loc.name}</span>
+                                                        <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                                                            <div className="flex items-center justify-between p-4">
+                                                                <div className="flex items-center gap-4">
+                                                                    <Icon name={loc.icon || "map-pin"} className="text-emerald-700 opacity-60" size={18} />
+                                                                    <span className="font-bold text-sm text-forest tracking-tight">{loc.name}</span>
+                                                                </div>
+                                                                <div className="flex gap-4">
+                                                                    {loc.instagram && (
+                                                                        <a href={loc.instagram} target="_blank" className="text-forest/30 hover:text-ember transition-colors">
+                                                                            <Icon name="instagram" size={18} />
+                                                                        </a>
+                                                                    )}
+                                                                    <a href={loc.url} target="_blank" className="text-forest/30 hover:text-emerald-700 transition-colors">
+                                                                        <Icon name="navigation" size={18} />
+                                                                    </a>
+                                                                </div>
                                                             </div>
-                                                            <Icon name="navigation" size={16} className="opacity-20 text-forest" />
-                                                        </a>
+                                                        </div>
                                                     ))}
                                                 </div>
                                             )}
@@ -352,17 +490,52 @@
                         )}
 
                         {activeTab === 'info' && (
-                            <div className="fade-in">
-                                <h2 className="text-3xl font-bold mb-8 text-forest tracking-tight">Cottage Details</h2>
-                                <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-8 text-forest">
-                                    <div>
-                                        <h4 className="editorial-caps text-[9px] opacity-40 mb-3">Location</h4>
-                                        <p className="text-xl font-bold leading-tight italic">San Geronimo / Lagunitas, CA 94963</p>
+                            <div className="fade-in pb-10">
+                                <h2 className="text-3xl font-bold mb-8 text-forest tracking-tight font-serif italic">Cottage Guide</h2>
+                                
+                                <div className="space-y-6">
+                                    <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 text-forest text-center">
+                                        <Icon name="key" size={24} className="text-ember mx-auto mb-4" />
+                                        <h3 className="text-xl font-bold mb-6">Arrival Essentials</h3>
+                                        <div className="grid grid-cols-2 gap-4 text-center">
+                                            <div className="p-4 bg-gray-50 rounded-2xl">
+                                                <h4 className="editorial-caps text-[8px] opacity-40 mb-1">Code</h4>
+                                                <p className="text-xl font-bold tracking-widest text-emerald-900">17395</p>
+                                            </div>
+                                            <div className="p-4 bg-gray-50 rounded-2xl">
+                                                <h4 className="editorial-caps text-[8px] opacity-40 mb-1">WiFi</h4>
+                                                <p className="text-sm font-bold truncate">blackberry154</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="space-y-4 text-sm font-medium">
-                                        <div className="flex gap-4 items-center"><Icon name="info" size={18} className="text-emerald-700 opacity-40" /> Rural road & wildlife</div>
-                                        <div className="flex gap-4 items-center"><Icon name="info" size={18} className="text-emerald-700 opacity-40" /> Fire pit on site</div>
-                                        <div className="flex gap-4 items-center"><Icon name="info" size={18} className="text-emerald-700 opacity-40" /> Strictly no parties</div>
+
+                                    <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 text-forest">
+                                        <h3 className="text-xl font-bold mb-4">The Space</h3>
+                                        <p className="text-[14px] leading-relaxed opacity-80 mb-6 font-sans">
+                                            Abundant open space, creeks, and wildlife. Perfect for outdoor lovers and writers. Under the oaks, sit by the winter fire pit under the stars.
+                                        </p>
+                                        <div className="space-y-4">
+                                            <div className="flex gap-4 items-start text-sm">
+                                                <Icon name="thermometer" size={18} className="text-emerald-700 opacity-40 shrink-0" />
+                                                <p className="font-sans"><span className="font-bold">Heating:</span> Side of kitchen sideboard (red light = on). Powerful heater in bathroom (keep off when not in use).</p>
+                                            </div>
+                                            <div className="flex gap-4 items-start text-sm">
+                                                <Icon name="briefcase" size={18} className="text-emerald-700 opacity-40 shrink-0" />
+                                                <p className="font-sans"><span className="font-bold">Storage:</span> Use hooks and luggage racks (no closets/dressers).</p>
+                                            </div>
+                                            <div className="flex gap-4 items-start text-sm">
+                                                <Icon name="coffee" size={18} className="text-emerald-700 opacity-40 shrink-0" />
+                                                <p className="font-sans"><span className="font-bold">Kitchen:</span> French press, pour-over, air fryer, microwave, and kitchenette essentials.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-emerald-900 text-white p-6 rounded-3xl shadow-lg">
+                                        <h3 className="text-xl font-bold mb-4 italic">Departure</h3>
+                                        <ul className="space-y-4 text-xs font-bold editorial-caps tracking-widest opacity-90">
+                                            <li className="flex gap-3"><Icon name="check" size={14} /> Turn off heaters & lights</li>
+                                            <li className="flex gap-3"><Icon name="check" size={14} /> Key back in lock box</li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>

@@ -3,15 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>West Marin Trip 2026</title>
+    <title>Point Reyes Trip 2026</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Satoshi (Sans-serif) & Newsreader (High-contrast Editorial Serif) -->
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,700;1,6..72,400&display=swap" rel="stylesheet">
+    
     <!-- React & Babel for Browser Transpilation -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
@@ -25,17 +29,38 @@
                         ember: '#D97706',
                     },
                     fontFamily: {
-                        serif: ['"Crimson Pro"', 'serif'],
-                        sans: ['Inter', 'sans-serif'],
+                        // Editorial High-Contrast Serif
+                        serif: ['Newsreader', 'serif'],
+                        // Modern Clean Sans
+                        sans: ['Satoshi', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #E8ECEB; color: #2D3A30; }
+        body { 
+            background-color: #E8ECEB; 
+            color: #2D3A30; 
+            font-family: 'Satoshi', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        h1, h2, h3 {
+            font-family: 'Newsreader', serif;
+            letter-spacing: -0.02em;
+        }
         .sticky-header { background: rgba(232, 236, 235, 0.95); backdrop-filter: blur(8px); }
         .glass-nav { background: rgba(45, 58, 48, 0.9); backdrop-filter: blur(12px); }
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Custom typography tweaks for that "Editorial" feel */
+        .editorial-caps {
+            font-family: 'Satoshi', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -44,7 +69,6 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Custom Icon Component to handle Lucide in HTML environment
         const Icon = ({ name, size = 18, className = "" }) => {
             useEffect(() => {
                 if (window.lucide) {
@@ -59,7 +83,7 @@
                 href={url} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3 mt-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50 active:scale-95 transition-all text-sm font-medium text-forest"
+                className="flex items-center justify-center gap-2 w-full py-3.5 mt-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:bg-gray-50 active:scale-[0.98] transition-all text-sm font-bold tracking-tight text-forest"
             >
                 <Icon name="navigation" size={16} className="text-emerald-700" />
                 Navigate
@@ -67,26 +91,26 @@
         );
 
         const TimelineItem = ({ time, title, description, location, icon, warning, verified }) => (
-            <div className="relative pl-8 pb-8 border-l border-emerald-900/10 last:border-0 last:pb-0">
+            <div className="relative pl-8 pb-10 border-l border-emerald-900/10 last:border-0 last:pb-0">
                 <div className="absolute -left-3 top-0 p-1.5 rounded-full bg-white border border-emerald-100 shadow-sm text-ember">
                     <Icon name={icon || "circle"} size={14} />
                 </div>
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold font-sans tracking-tighter opacity-50 uppercase">{time}</span>
+                        <span className="editorial-caps text-[9px] opacity-40">{time}</span>
                         {verified && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase tracking-wider">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[9px] font-black uppercase tracking-widest">
                                 <Icon name="check-circle" size={10} /> Verified
                             </span>
                         )}
                     </div>
-                    <h3 className="font-serif text-lg font-semibold leading-tight text-forest">{title}</h3>
-                    <p className="text-sm opacity-80 leading-relaxed font-sans mt-1">{description}</p>
+                    <h3 className="text-xl font-bold leading-tight text-forest tracking-tight">{title}</h3>
+                    <p className="text-[15px] opacity-75 leading-relaxed font-sans mt-1">{description}</p>
                     
                     {warning && (
-                        <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg flex gap-3">
+                        <div className="mt-3 p-4 bg-amber-50/50 border border-amber-200/60 rounded-xl flex gap-3">
                             <Icon name="alert-triangle" size={18} className="text-amber-600 shrink-0" />
-                            <p className="text-xs text-amber-900 leading-normal">{warning}</p>
+                            <p className="text-xs text-amber-900 leading-normal font-medium">{warning}</p>
                         </div>
                     )}
 
@@ -99,19 +123,56 @@
             const [activeTab, setActiveTab] = useState('days');
             const [openAccordion, setOpenAccordion] = useState('morning');
             const [lunchOption, setLunchOption] = useState('A');
+            const [expandedGroups, setExpandedGroups] = useState({
+                'Home': false,
+                'Dining': false,
+                'Nature': false,
+                'Coast': false
+            });
+
+            const toggleGroup = (group) => {
+                setExpandedGroups(prev => ({ ...prev, [group]: !prev[group] }));
+            };
+
+            const categoryMeta = {
+                'Home': { icon: '🏡', color: 'text-blue-900' },
+                'Dining': { icon: '🍽️', color: 'text-amber-900' },
+                'Nature': { icon: '🌲', color: 'text-emerald-900' },
+                'Coast': { icon: '🌊', color: 'text-cyan-900' }
+            };
+
+            const places = [
+                { name: "Creamery Cottage", url: "https://maps.google.com/?q=38.01183,-122.66805", cat: "Home", icon: "home" },
+                { name: "Station House Café", url: "https://maps.google.com/?q=Station+House+Cafe+Point+Reyes+Station", cat: "Dining", icon: "coffee" },
+                { name: "Good Earth Fairfax", url: "https://maps.google.com/?q=Good+Earth+Natural+Foods+Fairfax", cat: "Dining", icon: "shopping-bag" },
+                { name: "Barefoot Café", url: "https://maps.google.com/?q=Barefoot+Cafe+Fairfax", cat: "Dining", icon: "coffee" },
+                { name: "Stillwater Fairfax", url: "https://maps.google.com/?q=Stillwater+Fairfax+CA", cat: "Dining", icon: "utensils" },
+                { name: "Fradelizio’s", url: "https://maps.google.com/?q=Fradelizio%27s+Fairfax", cat: "Dining", icon: "utensils" },
+                { name: "Gestalt Haus", url: "https://maps.google.com/?q=Gestalt+Haus+Fairfax", cat: "Dining", icon: "beer" },
+                { name: "Roy’s Redwoods", url: "https://maps.google.com/?q=Roy%27s+Redwoods+Preserve", cat: "Nature", icon: "trees" },
+                { name: "Cypress Tree Tunnel", url: "https://maps.google.com/?q=Cypress+Tree+Tunnel", cat: "Nature", icon: "camera" },
+                { name: "Chicken Ranch Beach", url: "https://maps.google.com/?q=38.0709,-122.8795", cat: "Coast", icon: "waves" },
+                { name: "Point Reyes Lighthouse", url: "https://maps.google.com/?q=Point+Reyes+Lighthouse", cat: "Coast", icon: "wind" },
+            ];
+
+            const groupedPlaces = places.reduce((acc, place) => {
+                if (!acc[place.cat]) acc[place.cat] = [];
+                acc[place.cat].push(place);
+                return acc;
+            }, {});
 
             return (
-                <div className="min-h-screen font-sans pb-32">
+                <div className="min-h-screen pb-32">
                     {/* PERSISTENT HEADER */}
-                    <header className="sticky top-0 z-30 px-6 py-4 sticky-header border-b border-gray-200 shadow-sm">
-                        <div className="flex items-center justify-between">
+                    <header className="sticky top-0 z-30 px-6 py-5 sticky-header border-b border-gray-200/50 shadow-sm">
+                        <div className="flex items-center justify-between max-w-lg mx-auto">
                             <div>
-                                <h1 className="font-serif text-xl font-bold italic">Creamery Cottage</h1>
-                                <p className="text-[10px] font-medium opacity-60 uppercase tracking-tighter">San Geronimo · Jan 1–3, 2026</p>
+                                <h1 className="text-2xl font-bold text-forest italic">Point Reyes</h1>
+                                <p className="editorial-caps text-[8px] opacity-40 mt-1">San Geronimo · Jan 1–3, 2026</p>
                             </div>
                             <div className="flex flex-col items-end">
-                                <span className="text-[10px] uppercase font-bold text-emerald-700">Check-in</span>
-                                <span className="text-sm font-serif font-bold">4:00 PM</span>
+                                <span className="editorial-caps text-[8px] text-emerald-700">Check-in</span>
+                                <span className="text-base font-bold text-forest">4:00 PM</span>
                             </div>
                         </div>
                     </header>
@@ -120,10 +181,10 @@
                         {activeTab === 'days' && (
                             <div className="fade-in">
                                 {/* THURSDAY */}
-                                <section className="mb-8">
-                                    <div className="sticky top-16 z-10 py-3 mb-4 bg-fog/90 backdrop-blur-sm border-b border-gray-200">
-                                        <h2 className="font-serif text-2xl font-bold text-forest">Arrival & Landing</h2>
-                                        <p className="text-xs font-medium opacity-60 uppercase tracking-widest">Thursday, Jan 1</p>
+                                <section className="mb-12">
+                                    <div className="sticky top-[73px] z-10 py-4 mb-6 bg-fog/95 backdrop-blur-sm border-b border-gray-200/30">
+                                        <h2 className="text-3xl font-bold text-forest">Arrival & Unwind</h2>
+                                        <p className="editorial-caps text-[9px] opacity-40">Thursday, Jan 1</p>
                                     </div>
                                     <TimelineItem 
                                         time="4:00 PM" 
@@ -149,76 +210,79 @@
                                 </section>
 
                                 {/* FRIDAY */}
-                                <section className="mb-8">
-                                    <div className="sticky top-16 z-10 py-3 mb-4 bg-fog/90 backdrop-blur-sm border-b border-gray-200">
-                                        <h2 className="font-serif text-2xl font-bold text-forest">Redwoods & Coast</h2>
-                                        <p className="text-xs font-medium opacity-60 uppercase tracking-widest">Friday, Jan 2</p>
+                                <section className="mb-12">
+                                    <div className="sticky top-[73px] z-10 py-4 mb-6 bg-fog/95 backdrop-blur-sm border-b border-gray-200/30">
+                                        <h2 className="text-3xl font-bold text-forest">Redwoods & Coast</h2>
+                                        <p className="editorial-caps text-[9px] opacity-40">Friday, Jan 2</p>
                                     </div>
 
                                     <div className="space-y-4">
                                         {/* MORNING */}
-                                        <div className="bg-white/50 border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-                                            <button onClick={() => setOpenAccordion(openAccordion === 'morning' ? null : 'morning')} className="w-full px-5 py-4 flex items-center justify-between">
-                                                <div className="flex items-center gap-3">
-                                                    <Icon name="trees" className="text-emerald-700" />
-                                                    <span className="font-serif font-bold">Morning: Roy's Redwoods</span>
+                                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm text-forest transition-all">
+                                            <button onClick={() => setOpenAccordion(openAccordion === 'morning' ? null : 'morning')} className="w-full px-5 py-5 flex items-center justify-between active:bg-gray-50">
+                                                <div className="flex items-center gap-4">
+                                                    <Icon name="trees" className="text-emerald-700" size={20} />
+                                                    <span className="text-lg font-bold tracking-tight">Morning: Roy's Redwoods</span>
                                                 </div>
-                                                <Icon name={openAccordion === 'morning' ? "chevron-up" : "chevron-down"} />
+                                                <Icon name={openAccordion === 'morning' ? "chevron-up" : "chevron-down"} size={16} className="opacity-30" />
                                             </button>
                                             {openAccordion === 'morning' && (
-                                                <div className="px-5 pb-5">
-                                                    <p className="text-sm mb-4">Flat trails, creek crossings, real quiet. 45–90 minutes.</p>
+                                                <div className="px-5 pb-5 animate-in slide-in-from-top-2 duration-300">
+                                                    <p className="text-[14px] leading-relaxed opacity-70 mb-4">Flat trails, creek crossings, real quiet. 45–90 minutes.</p>
                                                     <NavigateButton url="https://maps.google.com/?q=Roy%27s+Redwoods+Preserve" />
                                                 </div>
                                             )}
                                         </div>
 
                                         {/* LUNCH */}
-                                        <div className="bg-white/50 border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-                                            <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                                                <div className="flex items-center gap-3">
-                                                    <Icon name="coffee" className="text-emerald-700" />
-                                                    <span className="font-serif font-bold">Lunch Options</span>
+                                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm text-forest">
+                                            <div className="px-5 py-5 border-b border-gray-50 flex items-center justify-between">
+                                                <div className="flex items-center gap-4">
+                                                    <Icon name="coffee" className="text-emerald-700" size={20} />
+                                                    <span className="text-lg font-bold tracking-tight">Lunch Options</span>
                                                 </div>
-                                                <div className="flex bg-gray-200 p-1 rounded-lg">
-                                                    <button onClick={() => setLunchOption('A')} className={`px-3 py-1 text-[10px] font-bold uppercase rounded-md ${lunchOption === 'A' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Fairfax</button>
-                                                    <button onClick={() => setLunchOption('B')} className={`px-3 py-1 text-[10px] font-bold uppercase rounded-md ${lunchOption === 'B' ? 'bg-white shadow-sm' : 'opacity-50'}`}>Cottage</button>
+                                                <div className="flex bg-gray-100 p-1 rounded-lg">
+                                                    <button onClick={() => setLunchOption('A')} className={`px-3 py-1.5 text-[9px] editorial-caps rounded-md transition-all ${lunchOption === 'A' ? 'bg-white shadow-sm opacity-100' : 'opacity-40'}`}>Fairfax</button>
+                                                    <button onClick={() => setLunchOption('B')} className={`px-3 py-1.5 text-[9px] editorial-caps rounded-md transition-all ${lunchOption === 'B' ? 'bg-white shadow-sm opacity-100' : 'opacity-40'}`}>Cottage</button>
                                                 </div>
                                             </div>
                                             <div className="p-5">
                                                 {lunchOption === 'A' ? (
-                                                    <div className="grid grid-cols-1 gap-2">
-                                                        <a href="https://maps.google.com/?q=Good+Earth+Natural+Foods+Fairfax" target="_blank" className="p-3 bg-white rounded-xl border border-gray-100 flex justify-between text-sm">Good Earth Foods <Icon name="external-link" size={14} className="opacity-30" /></a>
-                                                        <a href="https://maps.google.com/?q=Barefoot+Cafe+Fairfax" target="_blank" className="p-3 bg-white rounded-xl border border-gray-100 flex justify-between text-sm">Barefoot Café <Icon name="external-link" size={14} className="opacity-30" /></a>
+                                                    <div className="grid grid-cols-1 gap-2.5">
+                                                        <a href="https://maps.google.com/?q=Good+Earth+Natural+Foods+Fairfax" target="_blank" className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100 flex justify-between text-[13px] font-bold">Good Earth Foods <Icon name="external-link" size={14} className="opacity-20" /></a>
+                                                        <a href="https://maps.google.com/?q=Barefoot+Cafe+Fairfax" target="_blank" className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100 flex justify-between text-[13px] font-bold">Barefoot Café <Icon name="external-link" size={14} className="opacity-20" /></a>
+                                                        <a href="https://maps.google.com/?q=Stillwater+Fairfax+CA" target="_blank" className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100 flex justify-between text-[13px] font-bold">Stillwater <Icon name="external-link" size={14} className="opacity-20" /></a>
                                                     </div>
-                                                ) : <p className="text-sm text-center italic py-4">Easy afternoon back at the cottage base.</p>}
+                                                ) : <p className="text-sm text-center italic py-4 opacity-50 font-serif">A quiet afternoon back at the cottage base.</p>}
                                             </div>
                                         </div>
 
                                         {/* COASTAL */}
-                                        <div className="bg-white/50 border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-                                            <button onClick={() => setOpenAccordion(openAccordion === 'afternoon' ? null : 'afternoon')} className="w-full px-5 py-4 flex items-center justify-between">
-                                                <div className="flex items-center gap-3">
-                                                    <Icon name="waves" className="text-emerald-700" />
-                                                    <span className="font-serif font-bold">Afternoon: Coast</span>
+                                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm text-forest">
+                                            <button onClick={() => setOpenAccordion(openAccordion === 'afternoon' ? null : 'afternoon')} className="w-full px-5 py-5 flex items-center justify-between active:bg-gray-50">
+                                                <div className="flex items-center gap-4">
+                                                    <Icon name="waves" className="text-emerald-700" size={20} />
+                                                    <span className="text-lg font-bold tracking-tight">Afternoon: Coast</span>
                                                 </div>
-                                                <Icon name={openAccordion === 'afternoon' ? "chevron-up" : "chevron-down"} />
+                                                <Icon name={openAccordion === 'afternoon' ? "chevron-up" : "chevron-down"} size={16} className="opacity-30" />
                                             </button>
                                             {openAccordion === 'afternoon' && (
-                                                <div className="px-5 pb-5 space-y-6">
+                                                <div className="px-5 pb-5 space-y-8 animate-in slide-in-from-top-2 duration-300">
                                                     <div>
-                                                        <h4 className="font-bold text-sm mb-1">Chicken Ranch Beach</h4>
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight">Chicken Ranch Beach</h4>
+                                                        <p className="text-xs opacity-60 mb-3">Tomales Bay walk. Reset the system.</p>
                                                         <NavigateButton url="https://maps.google.com/?q=38.0709,-122.8795" />
                                                     </div>
                                                     <div>
-                                                        <h4 className="font-bold text-sm mb-1">Cypress Tree Tunnel</h4>
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight">Cypress Tree Tunnel</h4>
+                                                        <p className="text-xs opacity-60 mb-3">Visual punctuation — no lingering.</p>
                                                         <NavigateButton url="https://maps.google.com/?q=Cypress+Tree+Tunnel" />
                                                     </div>
                                                     <div>
-                                                        <h4 className="font-bold text-sm mb-1">Point Reyes Lighthouse</h4>
-                                                        <div className="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-lg flex gap-3 mb-2">
-                                                            <Icon name="alert-triangle" size={18} className="text-amber-600" />
-                                                            <p className="text-xs text-amber-900 font-medium">300+ steps down/up. Serious wind.</p>
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight">Point Reyes Lighthouse</h4>
+                                                        <div className="mt-2 p-4 bg-amber-50/50 border border-amber-200/60 rounded-xl flex gap-3 mb-3">
+                                                            <Icon name="alert-triangle" size={18} className="text-amber-600 shrink-0" />
+                                                            <p className="text-xs text-amber-900 font-bold leading-normal">300+ steps down/up. Serious wind. Punishing if you linger.</p>
                                                         </div>
                                                         <NavigateButton url="https://maps.google.com/?q=Point+Reyes+Lighthouse" />
                                                     </div>
@@ -230,9 +294,9 @@
 
                                 {/* SATURDAY */}
                                 <section>
-                                    <div className="sticky top-16 z-10 py-3 mb-4 bg-fog/90 backdrop-blur-sm border-b border-gray-200">
-                                        <h2 className="font-serif text-2xl font-bold text-forest">Leave Clean</h2>
-                                        <p className="text-xs font-medium opacity-60 uppercase tracking-widest">Saturday, Jan 3</p>
+                                    <div className="sticky top-[73px] z-10 py-4 mb-6 bg-fog/95 backdrop-blur-sm border-b border-gray-200/30">
+                                        <h2 className="text-3xl font-bold text-forest">Gentle Departure</h2>
+                                        <p className="editorial-caps text-[9px] opacity-40">Saturday, Jan 3</p>
                                     </div>
                                     <TimelineItem 
                                         time="Morning" 
@@ -243,7 +307,7 @@
                                     <TimelineItem 
                                         time="11:00 AM" 
                                         title="Check-out" 
-                                        description="Leave without squeezing."
+                                        description="Leave without squeezing. That's success."
                                         icon="external-link"
                                         location="https://maps.google.com/?q=38.01183,-122.66805"
                                     />
@@ -252,37 +316,53 @@
                         )}
 
                         {activeTab === 'map' && (
-                            <div className="fade-in space-y-3">
-                                <h2 className="font-serif text-2xl font-bold mb-6 text-forest">Quick Links</h2>
-                                {[
-                                    { name: "Creamery Cottage", url: "https://maps.google.com/?q=38.01183,-122.66805" },
-                                    { name: "Station House Café", url: "https://maps.google.com/?q=Station+House+Cafe+Point+Reyes+Station" },
-                                    { name: "Roy’s Redwoods", url: "https://maps.google.com/?q=Roy%27s+Redwoods+Preserve" },
-                                    { name: "Lighthouse", url: "https://maps.google.com/?q=Point+Reyes+Lighthouse" },
-                                ].map((loc, i) => (
-                                    <a key={i} href={loc.url} target="_blank" className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-200">
-                                        <div className="flex items-center gap-3">
-                                            <Icon name="map-pin" className="text-emerald-700" />
-                                            <span className="font-medium text-sm">{loc.name}</span>
+                            <div className="fade-in pb-10">
+                                <h2 className="text-3xl font-bold mb-8 text-forest tracking-tight">Places to Go</h2>
+                                <div className="space-y-6">
+                                    {Object.keys(groupedPlaces).map((category) => (
+                                        <div key={category} className="space-y-3">
+                                            <button 
+                                                onClick={() => toggleGroup(category)}
+                                                className="w-full flex items-center justify-between py-2 border-b border-emerald-900/10 active:opacity-60 transition-opacity"
+                                            >
+                                                <h3 className={`editorial-caps text-[10px] flex items-center gap-2 ${categoryMeta[category]?.color || 'text-emerald-800/60'}`}>
+                                                    <span className="text-base leading-none">{categoryMeta[category]?.icon}</span>
+                                                    {category} ({groupedPlaces[category].length})
+                                                </h3>
+                                                <Icon name={expandedGroups[category] ? "chevron-up" : "chevron-down"} size={14} className="opacity-30" />
+                                            </button>
+                                            
+                                            {expandedGroups[category] && (
+                                                <div className="grid grid-cols-1 gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                                                    {groupedPlaces[category].map((loc, i) => (
+                                                        <a key={i} href={loc.url} target="_blank" className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-100 active:bg-gray-50 transition-colors">
+                                                            <div className="flex items-center gap-4">
+                                                                <Icon name={loc.icon || "map-pin"} className="text-emerald-700 opacity-60" size={18} />
+                                                                <span className="font-bold text-sm text-forest tracking-tight">{loc.name}</span>
+                                                            </div>
+                                                            <Icon name="navigation" size={16} className="opacity-20 text-forest" />
+                                                        </a>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
-                                        <Icon name="navigation" size={16} className="opacity-30" />
-                                    </a>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         )}
 
                         {activeTab === 'info' && (
                             <div className="fade-in">
-                                <h2 className="font-serif text-2xl font-bold mb-6 text-forest">Cottage Details</h2>
-                                <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 space-y-6">
+                                <h2 className="text-3xl font-bold mb-8 text-forest tracking-tight">Cottage Details</h2>
+                                <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 space-y-8 text-forest">
                                     <div>
-                                        <h4 className="text-[10px] font-bold uppercase opacity-50 mb-2">Location</h4>
-                                        <p className="font-serif text-lg">San Geronimo / Lagunitas, CA 94963</p>
+                                        <h4 className="editorial-caps text-[9px] opacity-40 mb-3">Location</h4>
+                                        <p className="text-xl font-bold leading-tight italic">San Geronimo / Lagunitas, CA 94963</p>
                                     </div>
-                                    <div className="space-y-3 text-sm">
-                                        <div className="flex gap-3"><Icon name="info" size={16} className="text-emerald-600" /> Rural road & wildlife</div>
-                                        <div className="flex gap-3"><Icon name="info" size={16} className="text-emerald-600" /> Fire pit on site</div>
-                                        <div className="flex gap-3"><Icon name="info" size={16} className="text-emerald-600" /> Strictly no parties</div>
+                                    <div className="space-y-4 text-sm font-medium">
+                                        <div className="flex gap-4 items-center"><Icon name="info" size={18} className="text-emerald-700 opacity-40" /> Rural road & wildlife</div>
+                                        <div className="flex gap-4 items-center"><Icon name="info" size={18} className="text-emerald-700 opacity-40" /> Fire pit on site</div>
+                                        <div className="flex gap-4 items-center"><Icon name="info" size={18} className="text-emerald-700 opacity-40" /> Strictly no parties</div>
                                     </div>
                                 </div>
                             </div>
@@ -290,19 +370,19 @@
                     </main>
 
                     {/* BOTTOM NAVIGATION */}
-                    <nav className="fixed bottom-6 left-6 right-6 z-50">
-                        <div className="glass-nav rounded-full shadow-2xl px-2 py-2 flex items-center justify-between">
-                            <button onClick={() => setActiveTab('days')} className={`flex-1 flex flex-col items-center py-2 rounded-full transition-all ${activeTab === 'days' ? 'bg-white/10 text-white' : 'text-white/40'}`}>
+                    <nav className="fixed bottom-8 left-6 right-6 z-50">
+                        <div className="glass-nav rounded-full shadow-2xl px-2 py-2 flex items-center justify-between max-w-sm mx-auto">
+                            <button onClick={() => setActiveTab('days')} className={`flex-1 flex flex-col items-center py-2.5 rounded-full transition-all ${activeTab === 'days' ? 'bg-white/10 text-white' : 'text-white/30'}`}>
                                 <Icon name="calendar" />
-                                <span className="text-[10px] mt-1 font-bold uppercase tracking-tighter">Itinerary</span>
+                                <span className="editorial-caps text-[8px] mt-1.5 opacity-80">Itinerary</span>
                             </button>
-                            <button onClick={() => setActiveTab('map')} className={`flex-1 flex flex-col items-center py-2 rounded-full transition-all ${activeTab === 'map' ? 'bg-white/10 text-white' : 'text-white/40'}`}>
+                            <button onClick={() => setActiveTab('map')} className={`flex-1 flex flex-col items-center py-2.5 rounded-full transition-all ${activeTab === 'map' ? 'bg-white/10 text-white' : 'text-white/30'}`}>
                                 <Icon name="map-pin" />
-                                <span className="text-[10px] mt-1 font-bold uppercase tracking-tighter">Places</span>
+                                <span className="editorial-caps text-[8px] mt-1.5 opacity-80">Places</span>
                             </button>
-                            <button onClick={() => setActiveTab('info')} className={`flex-1 flex flex-col items-center py-2 rounded-full transition-all ${activeTab === 'info' ? 'bg-white/10 text-white' : 'text-white/40'}`}>
+                            <button onClick={() => setActiveTab('info')} className={`flex-1 flex flex-col items-center py-2.5 rounded-full transition-all ${activeTab === 'info' ? 'bg-white/10 text-white' : 'text-white/30'}`}>
                                 <Icon name="home" />
-                                <span className="text-[10px] mt-1 font-bold uppercase tracking-tighter">Cottage</span>
+                                <span className="editorial-caps text-[8px] mt-1.5 opacity-80">Cottage</span>
                             </button>
                         </div>
                     </nav>

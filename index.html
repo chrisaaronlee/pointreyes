@@ -138,7 +138,8 @@
                 'Dining': false,
                 'Nature': false,
                 'Coast': false,
-                'Community': false
+                'Community': false,
+                'Visitor Centers': false
             });
 
             const toggleGroup = (group) => {
@@ -150,7 +151,8 @@
                 'Dining': { icon: '🍽️', color: 'text-amber-900' },
                 'Nature': { icon: '🌲', color: 'text-emerald-900' },
                 'Coast': { icon: '🌊', color: 'text-cyan-900' },
-                'Community': { icon: '👨‍🌾', color: 'text-orange-900' }
+                'Community': { icon: '👨‍🌾', color: 'text-orange-900' },
+                'Visitor Centers': { icon: '🏛️', color: 'text-indigo-900' }
             };
 
             const places = [
@@ -166,6 +168,20 @@
                     cat: "Dining", 
                     icon: "coffee",
                     instagram: "https://www.instagram.com/stationhousecafe/" 
+                },
+                { 
+                    name: "Cafe Reyes", 
+                    url: "https://maps.google.com/?q=Cafe+Reyes+Point+Reyes+Station", 
+                    cat: "Dining", 
+                    icon: "utensils",
+                    instagram: "https://www.instagram.com/cafereyes/" 
+                },
+                { 
+                    name: "Inverness Park Market", 
+                    url: "https://maps.google.com/?q=Inverness+Park+Market", 
+                    cat: "Dining", 
+                    icon: "shopping-basket",
+                    instagram: "https://www.instagram.com/inverness_park_market/" 
                 },
                 { 
                     name: "Bovine Bakery", 
@@ -223,17 +239,30 @@
                     icon: "camera" 
                 },
                 { 
-                    name: "Chicken Ranch Beach", 
-                    url: "https://maps.google.com/?q=38.0709,-122.8795", 
+                    name: "Drakes Beach", 
+                    url: "https://maps.google.com/?q=Drakes+Beach+Point+Reyes", 
                     cat: "Coast", 
-                    icon: "waves",
-                    instagram: "https://www.instagram.com/explore/locations/5001670/chicken-ranch-beach/"
+                    icon: "waves"
                 },
                 { 
                     name: "Point Reyes Lighthouse", 
                     url: "https://maps.google.com/?q=Point+Reyes+Lighthouse", 
                     cat: "Coast", 
                     icon: "wind",
+                    instagram: "https://www.instagram.com/pointreyesnps/?hl=en"
+                },
+                { 
+                    name: "Bear Valley Visitor Center", 
+                    url: "https://maps.google.com/?q=Bear+Valley+Visitor+Center", 
+                    cat: "Visitor Centers", 
+                    icon: "info",
+                    instagram: "https://www.instagram.com/pointreyesnps/?hl=en"
+                },
+                { 
+                    name: "Lighthouse Visitor Center", 
+                    url: "https://maps.google.com/?q=Point+Reyes+Lighthouse+Visitor+Center", 
+                    cat: "Visitor Centers", 
+                    icon: "info",
                     instagram: "https://www.instagram.com/pointreyesnps/?hl=en"
                 },
             ];
@@ -250,10 +279,10 @@
                     <header className="sticky top-0 z-30 px-6 py-5 sticky-header border-b border-gray-200/50 shadow-sm text-forest">
                         <div className="flex items-center justify-between max-w-lg mx-auto">
                             <div>
-                                <h1 className="text-2xl font-bold italic tracking-tight">Point Reyes</h1>
+                                <h1 className="text-2xl font-bold italic tracking-tight text-forest">Point Reyes</h1>
                                 <p className="editorial-caps text-[8px] opacity-40 mt-1">San Geronimo · Jan 1–3, 2026</p>
                             </div>
-                            <div className="flex flex-col items-end">
+                            <div className="flex flex-col items-end text-forest">
                                 <span className="editorial-caps text-[8px] text-emerald-700">Check-in</span>
                                 <span className="text-base font-bold">4:00 PM</span>
                             </div>
@@ -272,7 +301,7 @@
                                     <TimelineItem 
                                         time="4:00 PM" 
                                         title="Check-in" 
-                                        description="Unpack lightly. Let the place go quiet."
+                                        description="Get settled and take a minute to enjoy the silence of the redwoods."
                                         icon="home"
                                         location="https://maps.google.com/?q=38.01183,-122.66805"
                                     />
@@ -311,7 +340,7 @@
                                             </button>
                                             {openAccordion === 'morning' && (
                                                 <div className="px-5 pb-5 animate-in slide-in-from-top-2 duration-300">
-                                                    <p className="text-[14px] leading-relaxed opacity-70 mb-4">Flat trails, creek crossings, real quiet. 45–90 minutes.</p>
+                                                    <p className="text-[14px] leading-relaxed opacity-70 mb-4 font-sans">Flat trails, creek crossings, real quiet. 45–90 minutes.</p>
                                                     <ActionButtons 
                                                         navigateUrl="https://maps.google.com/?q=Roy%27s+Redwoods+Preserve" 
                                                         instagramUrl="https://www.instagram.com/explore/locations/7022266/roys-redwoods-preserve/" 
@@ -327,21 +356,39 @@
                                                     <span className="text-lg font-bold tracking-tight">Lunch Options</span>
                                                 </div>
                                                 <div className="flex bg-gray-100 p-1 rounded-lg">
-                                                    <button onClick={() => setLunchOption('A')} className={`px-3 py-1.5 text-[9px] editorial-caps rounded-md transition-all ${lunchOption === 'A' ? 'bg-white shadow-sm opacity-100' : 'opacity-40'}`}>Fairfax</button>
+                                                    <button onClick={() => setLunchOption('A')} className={`px-3 py-1.5 text-[9px] editorial-caps rounded-md transition-all ${lunchOption === 'A' ? 'bg-white shadow-sm opacity-100' : 'opacity-40'}`}>Out</button>
                                                     <button onClick={() => setLunchOption('B')} className={`px-3 py-1.5 text-[9px] editorial-caps rounded-md transition-all ${lunchOption === 'B' ? 'bg-white shadow-sm opacity-100' : 'opacity-40'}`}>Cottage</button>
                                                 </div>
                                             </div>
                                             <div className="p-5">
                                                 {lunchOption === 'A' ? (
                                                     <div className="grid grid-cols-1 gap-2.5">
-                                                        <a href="https://www.instagram.com/goodearthnatural/?hl=en" target="_blank" className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100 flex justify-between text-[13px] font-bold">Good Earth <Icon name="instagram" size={14} className="opacity-40" /></a>
-                                                        <a href="https://www.instagram.com/stillwater_fairfax/" target="_blank" className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100 flex justify-between text-[13px] font-bold">Stillwater <Icon name="instagram" size={14} className="opacity-40" /></a>
+                                                        <div className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100">
+                                                            <div className="flex justify-between items-center mb-1">
+                                                                <span className="text-[13px] font-bold">Cafe Reyes</span>
+                                                                <div className="flex gap-3">
+                                                                    <a href="https://www.instagram.com/cafereyes/" target="_blank"><Icon name="instagram" size={14} className="opacity-40" /></a>
+                                                                    <a href="https://maps.google.com/?q=Cafe+Reyes+Point+Reyes+Station" target="_blank"><Icon name="navigation" size={14} className="opacity-40" /></a>
+                                                                </div>
+                                                            </div>
+                                                            <p className="text-[11px] opacity-60 font-sans">Wood-fired pizza & local fare.</p>
+                                                        </div>
+                                                        <div className="p-3.5 bg-gray-50/50 rounded-xl border border-gray-100">
+                                                            <div className="flex justify-between items-center mb-1">
+                                                                <span className="text-[13px] font-bold">Inverness Park Market</span>
+                                                                <div className="flex gap-3">
+                                                                    <a href="https://www.instagram.com/inverness_park_market/" target="_blank"><Icon name="instagram" size={14} className="opacity-40" /></a>
+                                                                    <a href="https://maps.google.com/?q=Inverness+Park+Market" target="_blank"><Icon name="navigation" size={14} className="opacity-40" /></a>
+                                                                </div>
+                                                            </div>
+                                                            <p className="text-[11px] opacity-60 font-sans">Excellent deli sandwiches & market staples.</p>
+                                                        </div>
                                                     </div>
-                                                ) : <p className="text-sm text-center italic py-4 opacity-50 font-serif">A quiet afternoon back at the cottage base.</p>}
+                                                ) : <p className="text-sm text-center italic py-4 opacity-50 font-serif text-forest">A quiet afternoon back at the cottage base.</p>}
                                             </div>
                                         </div>
 
-                                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm text-forest">
+                                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm text-forest text-forest">
                                             <button onClick={() => setOpenAccordion(openAccordion === 'afternoon' ? null : 'afternoon')} className="w-full px-5 py-5 flex items-center justify-between active:bg-gray-50">
                                                 <div className="flex items-center gap-4">
                                                     <Icon name="waves" className="text-emerald-700" size={20} />
@@ -352,20 +399,19 @@
                                             {openAccordion === 'afternoon' && (
                                                 <div className="px-5 pb-5 space-y-8 animate-in slide-in-from-top-2 duration-300">
                                                     <div>
-                                                        <h4 className="text-base font-bold mb-1 tracking-tight text-forest">Chicken Ranch Beach</h4>
-                                                        <p className="text-xs opacity-60 mb-3 font-sans leading-relaxed">Tomales Bay walk. Reset the system.</p>
-                                                        <ActionButtons 
-                                                            navigateUrl="https://maps.google.com/?q=38.0709,-122.8795" 
-                                                            instagramUrl="https://www.instagram.com/explore/locations/5001670/chicken-ranch-beach/"
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <h4 className="text-base font-bold mb-1 tracking-tight text-forest">Cypress Tree Tunnel</h4>
-                                                        <p className="text-xs opacity-60 mb-3 font-sans leading-relaxed">Visual punctuation — no lingering.</p>
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight">1. Cypress Tree Tunnel</h4>
+                                                        <p className="text-xs opacity-60 mb-3 font-sans leading-relaxed">Perfect for a quick walkthrough and a few photos before heading deeper into the park.</p>
                                                         <ActionButtons navigateUrl="https://maps.google.com/?q=Cypress+Tree+Tunnel" />
                                                     </div>
                                                     <div>
-                                                        <h4 className="text-base font-bold mb-1 tracking-tight text-forest">Point Reyes Lighthouse</h4>
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight">2. Drakes Beach</h4>
+                                                        <p className="text-xs opacity-60 mb-3 font-sans leading-relaxed">Expansive beach with dramatic white cliffs. Great for a long stroll on the sand.</p>
+                                                        <ActionButtons 
+                                                            navigateUrl="https://maps.google.com/?q=Drakes+Beach+Point+Reyes" 
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-base font-bold mb-1 tracking-tight">3. Point Reyes Lighthouse</h4>
                                                         <div className="mt-2 p-4 bg-amber-50/50 border border-amber-200/60 rounded-xl flex gap-3 mb-3">
                                                             <Icon name="alert-triangle" size={18} className="text-amber-600 shrink-0" />
                                                             <p className="text-xs text-amber-900 font-bold leading-normal">300+ steps down/up. Serious wind.</p>
@@ -382,15 +428,14 @@
                                 </section>
 
                                 {/* SATURDAY */}
-                                <section className="mb-12">
+                                <section className="mb-12 text-forest text-forest">
                                     <div className="sticky top-[73px] z-10 py-4 mb-6 bg-fog/95 backdrop-blur-sm border-b border-gray-200/30">
-                                        <h2 className="text-3xl font-bold text-forest">Gentle Departure</h2>
+                                        <h2 className="text-3xl font-bold">Gentle Departure</h2>
                                         <p className="editorial-caps text-[9px] opacity-40">Saturday, Jan 3</p>
                                     </div>
 
                                     <div className="space-y-4">
-                                        {/* SATURDAY MORNING CHOICE */}
-                                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm text-forest">
+                                        <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
                                             <div className="px-5 py-5 border-b border-gray-50 flex items-center justify-between">
                                                 <div className="flex items-center gap-4">
                                                     <Icon name="sun" className="text-emerald-700" size={20} />
@@ -403,7 +448,7 @@
                                             </div>
                                             <div className="p-5">
                                                 {saturdayOption === 'A' ? (
-                                                    <div className="animate-in fade-in duration-300">
+                                                    <div className="animate-in fade-in duration-300 text-forest">
                                                         <h4 className="text-base font-bold mb-1 tracking-tight">Bovine Bakery</h4>
                                                         <p className="text-[14px] leading-relaxed opacity-70 mb-4 font-sans">Mandatory stop. Grab a coffee and their famous morning bun.</p>
                                                         <ActionButtons 
@@ -412,9 +457,9 @@
                                                         />
                                                     </div>
                                                 ) : (
-                                                    <div className="animate-in fade-in duration-300">
+                                                    <div className="animate-in fade-in duration-300 text-forest text-forest">
                                                         <h4 className="text-base font-bold mb-1 tracking-tight">Farmers Market</h4>
-                                                        <p className="text-[14px] leading-relaxed opacity-70 mb-4 font-sans">Organic local produce, artisanal crafts, and the heart of the community.</p>
+                                                        <p className="text-[14px] leading-relaxed opacity-70 mb-4 font-sans font-sans">Organic local produce and artisanal crafts in the heart of town.</p>
                                                         <ActionButtons 
                                                             navigateUrl="https://maps.google.com/?q=Point+Reyes+Farmers+Market" 
                                                             instagramUrl="https://www.instagram.com/point_reyes_farmers_market/?hl=en"
@@ -433,7 +478,7 @@
                                         <TimelineItem 
                                             time="11:00 AM" 
                                             title="Check-out" 
-                                            description="Leave without squeezing. That's success."
+                                            description="Taking our time to pack up and head out."
                                             icon="external-link"
                                             location="https://maps.google.com/?q=38.01183,-122.66805"
                                         />
@@ -450,7 +495,7 @@
                                         <div key={category} className="space-y-3">
                                             <button 
                                                 onClick={() => toggleGroup(category)}
-                                                className="w-full flex items-center justify-between py-2 border-b border-emerald-900/10 active:opacity-60 transition-opacity"
+                                                className="w-full flex items-center justify-between py-2 border-b border-emerald-900/10 active:opacity-60 transition-opacity text-forest text-forest"
                                             >
                                                 <h3 className={`editorial-caps text-[10px] flex items-center gap-2 ${categoryMeta[category]?.color || 'text-emerald-800/60'}`}>
                                                     <span className="text-base leading-none">{categoryMeta[category]?.icon}</span>
@@ -462,11 +507,11 @@
                                             {expandedGroups[category] && (
                                                 <div className="grid grid-cols-1 gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
                                                     {groupedPlaces[category].map((loc, i) => (
-                                                        <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                                                        <div key={i} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden text-forest text-forest">
                                                             <div className="flex items-center justify-between p-4">
                                                                 <div className="flex items-center gap-4">
                                                                     <Icon name={loc.icon || "map-pin"} className="text-emerald-700 opacity-60" size={18} />
-                                                                    <span className="font-bold text-sm text-forest tracking-tight">{loc.name}</span>
+                                                                    <span className="font-bold text-sm tracking-tight">{loc.name}</span>
                                                                 </div>
                                                                 <div className="flex gap-4">
                                                                     {loc.instagram && (
@@ -490,7 +535,7 @@
                         )}
 
                         {activeTab === 'info' && (
-                            <div className="fade-in pb-10">
+                            <div className="fade-in pb-10 text-forest text-forest">
                                 <h2 className="text-3xl font-bold mb-8 text-forest tracking-tight font-serif italic">Cottage Guide</h2>
                                 
                                 <div className="space-y-6">
@@ -499,12 +544,12 @@
                                         <h3 className="text-xl font-bold mb-6">Arrival Essentials</h3>
                                         <div className="grid grid-cols-2 gap-4 text-center">
                                             <div className="p-4 bg-gray-50 rounded-2xl">
-                                                <h4 className="editorial-caps text-[8px] opacity-40 mb-1">Code</h4>
+                                                <h4 className="editorial-caps text-[8px] opacity-40 mb-1 text-forest text-forest">Code</h4>
                                                 <p className="text-xl font-bold tracking-widest text-emerald-900">17395</p>
                                             </div>
                                             <div className="p-4 bg-gray-50 rounded-2xl">
-                                                <h4 className="editorial-caps text-[8px] opacity-40 mb-1">WiFi</h4>
-                                                <p className="text-sm font-bold truncate">blackberry154</p>
+                                                <h4 className="editorial-caps text-[8px] opacity-40 mb-1 text-forest text-forest">WiFi</h4>
+                                                <p className="text-sm font-bold truncate font-sans text-forest text-forest text-forest">blackberry154</p>
                                             </div>
                                         </div>
                                     </div>
@@ -515,23 +560,23 @@
                                             Abundant open space, creeks, and wildlife. Perfect for outdoor lovers and writers. Under the oaks, sit by the winter fire pit under the stars.
                                         </p>
                                         <div className="space-y-4">
-                                            <div className="flex gap-4 items-start text-sm">
+                                            <div className="flex gap-4 items-start text-sm text-forest text-forest">
                                                 <Icon name="thermometer" size={18} className="text-emerald-700 opacity-40 shrink-0" />
-                                                <p className="font-sans"><span className="font-bold">Heating:</span> Side of kitchen sideboard (red light = on). Powerful heater in bathroom (keep off when not in use).</p>
+                                                <p className="font-sans font-sans font-sans font-sans"><span className="font-bold">Heating:</span> Side of kitchen sideboard (red light = on). Powerful heater in bathroom (keep off when not in use).</p>
                                             </div>
-                                            <div className="flex gap-4 items-start text-sm">
+                                            <div className="flex gap-4 items-start text-sm text-forest text-forest">
                                                 <Icon name="briefcase" size={18} className="text-emerald-700 opacity-40 shrink-0" />
-                                                <p className="font-sans"><span className="font-bold">Storage:</span> Use hooks and luggage racks (no closets/dressers).</p>
+                                                <p className="font-sans font-sans font-sans font-sans"><span className="font-bold">Storage:</span> Use hooks and luggage racks (no closets/dressers).</p>
                                             </div>
-                                            <div className="flex gap-4 items-start text-sm">
+                                            <div className="flex gap-4 items-start text-sm text-forest text-forest text-forest">
                                                 <Icon name="coffee" size={18} className="text-emerald-700 opacity-40 shrink-0" />
-                                                <p className="font-sans"><span className="font-bold">Kitchen:</span> French press, pour-over, air fryer, microwave, and kitchenette essentials.</p>
+                                                <p className="font-sans font-sans font-sans font-sans"><span className="font-bold">Kitchen:</span> French press, pour-over, air fryer, microwave, and kitchenette essentials.</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="bg-emerald-900 text-white p-6 rounded-3xl shadow-lg">
-                                        <h3 className="text-xl font-bold mb-4 italic">Departure</h3>
+                                        <h3 className="text-xl font-bold mb-4 italic text-white text-white text-white">Departure</h3>
                                         <ul className="space-y-4 text-xs font-bold editorial-caps tracking-widest opacity-90">
                                             <li className="flex gap-3"><Icon name="check" size={14} /> Turn off heaters & lights</li>
                                             <li className="flex gap-3"><Icon name="check" size={14} /> Key back in lock box</li>
@@ -543,19 +588,19 @@
                     </main>
 
                     {/* BOTTOM NAVIGATION */}
-                    <nav className="fixed bottom-8 left-6 right-6 z-50">
+                    <nav className="fixed bottom-8 left-6 right-6 z-50 text-forest text-forest">
                         <div className="glass-nav rounded-full shadow-2xl px-2 py-2 flex items-center justify-between max-w-sm mx-auto">
                             <button onClick={() => setActiveTab('days')} className={`flex-1 flex flex-col items-center py-2.5 rounded-full transition-all ${activeTab === 'days' ? 'bg-white/10 text-white' : 'text-white/30'}`}>
                                 <Icon name="calendar" />
-                                <span className="editorial-caps text-[8px] mt-1.5 opacity-80">Itinerary</span>
+                                <span className="editorial-caps text-[8px] mt-1.5 opacity-80 text-forest text-forest">Itinerary</span>
                             </button>
                             <button onClick={() => setActiveTab('map')} className={`flex-1 flex flex-col items-center py-2.5 rounded-full transition-all ${activeTab === 'map' ? 'bg-white/10 text-white' : 'text-white/30'}`}>
                                 <Icon name="map-pin" />
-                                <span className="editorial-caps text-[8px] mt-1.5 opacity-80">Places</span>
+                                <span className="editorial-caps text-[8px] mt-1.5 opacity-80 text-forest text-forest">Places</span>
                             </button>
                             <button onClick={() => setActiveTab('info')} className={`flex-1 flex flex-col items-center py-2.5 rounded-full transition-all ${activeTab === 'info' ? 'bg-white/10 text-white' : 'text-white/30'}`}>
                                 <Icon name="home" />
-                                <span className="editorial-caps text-[8px] mt-1.5 opacity-80">Cottage</span>
+                                <span className="editorial-caps text-[8px] mt-1.5 opacity-80 text-forest text-forest">Cottage</span>
                             </button>
                         </div>
                     </nav>
